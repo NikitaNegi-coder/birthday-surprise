@@ -50,27 +50,27 @@ const CONFIG = {
   // ANY photo you decide to upload (selfies, travel pictures, candid shots, etc.)!
   slides: [
     {
-      image: "assets/photo1.png",
+      image: "photo1.png",
       title: "❤️ My Favorite View",
       desc: "No matter where we go or what we do, looking at you is my favorite thing in the world."
     },
     {
-      image: "assets/photo2.png",
+      image: "photo2.png",
       title: "✨ Pure Happiness",
       desc: "This memory makes me smile every single time I look at it. You make everything better."
     },
     {
-      image: "assets/photo3.png",
+      image: "photo3.png",
       title: "⏳ Forever Moments",
       desc: "I wish I could freeze time in moments like this, just to stay next to you longer."
     },
     {
-      image: "assets/photo_favorite.png",
+      image: "photo_favorite.png",
       title: "🧸 My Happy Place",
       desc: "Just looking at your face in this picture makes my entire day so much brighter."
     },
     {
-      image: "assets/photo1.png",
+      image: "photo1.png",
       title: "💫 To the Moon & Back",
       desc: "Every single memory I make with you is my absolute favorite. I love you so much."
     }
@@ -108,5 +108,5 @@ Happy Birthday, Tushar! ❤️`,
   },
 
   // Level 9: Final Favorite Photo Display
-  favoritePhoto: "assets/photo_favorite.png"
+  favoritePhoto: "photo_favorite.png"
 };
