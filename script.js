@@ -3,15 +3,21 @@ document.addEventListener("DOMContentLoaded", () => {
   initCursorHearts();
   initBackgroundCanvas();
   initGiftBox();
-  initQuiz();
+  initLockSlider();
   initGreeting();
+  initIceCreamGate();
   initSlider();
+  initMemoryGame();
   initMusic();
+  initReasonsBox();
   initTimelineAndCounter();
+  initGameGate();
   initGame();
+  initScratchCard();
   initTypewriter();
   initCard();
-  initLastSurprise();
+  initLastSurpriseChain();
+  initEvasiveButtons();
 });
 
 // --- AUDIO SYNTHESIZER (MUSIC BOX TUNE) ---
@@ -19,6 +25,7 @@ let audioCtx = null;
 let musicInterval = null;
 let isPlaying = false;
 let currentNoteIndex = 0;
+let notesInterval = null;
 
 const MELODY = [
   { freq: 392.00, dur: 0.75 }, // G4
@@ -102,6 +109,9 @@ function startMusic() {
   isPlaying = true;
   currentNoteIndex = 0;
   playNextNote();
+  
+  if (notesInterval) clearInterval(notesInterval);
+  notesInterval = setInterval(spawnFloatingNote, 400);
 }
 
 function playNextNote() {
@@ -122,6 +132,33 @@ function stopMusic() {
   if (musicInterval) {
     clearTimeout(musicInterval);
   }
+  if (notesInterval) {
+    clearInterval(notesInterval);
+    notesInterval = null;
+  }
+}
+
+function spawnFloatingNote() {
+  const container = document.querySelector(".music-player-container");
+  if (!container) return;
+  
+  const note = document.createElement("div");
+  note.classList.add("floating-note");
+  
+  const noteSymbols = ["🎵", "🎶", "♩", "♪", "🎹", "✨"];
+  note.innerText = noteSymbols[Math.floor(Math.random() * noteSymbols.length)];
+  
+  const xOffset = `${Math.random() * 120 - 60}px`;
+  const rotation = `${Math.random() * 90 - 45}deg`;
+  
+  note.style.setProperty("--x-offset", xOffset);
+  note.style.setProperty("--rotation", rotation);
+  
+  container.appendChild(note);
+  
+  setTimeout(() => {
+    note.remove();
+  }, 2500);
 }
 
 
@@ -132,29 +169,25 @@ function initCursorHearts() {
   const spawnHeart = (x, y) => {
     const heart = document.createElement("div");
     heart.classList.add("cursor-heart");
-    heart.innerText = "❤️";
+    heart.innerText = Math.random() < 0.3 ? "✨" : "❤️";
     
-    // Slight random offset
     const offsetX = Math.random() * 16 - 8;
     const offsetY = Math.random() * 16 - 8;
     
     heart.style.left = `${x + offsetX}px`;
     heart.style.top = `${y + offsetY}px`;
     
-    // Randomize scaling
     const scale = Math.random() * 0.6 + 0.6;
     heart.style.transform = `scale(${scale})`;
     
     container.appendChild(heart);
     
-    // Remove heart element after animation completes
     setTimeout(() => {
       heart.remove();
     }, 1200);
   };
 
   window.addEventListener("mousemove", (e) => {
-    // Only spawn occasionally to reduce clutter
     if (Math.random() < 0.25) {
       spawnHeart(e.pageX, e.pageY);
     }
@@ -173,6 +206,9 @@ function initCursorHearts() {
 let bgCanvas, bgCtx;
 let bgHearts = [];
 let bgConfetti = [];
+let fireworks = [];
+let fireworkParticles = [];
+let isFireworksActive = false;
 
 function initBackgroundCanvas() {
   bgCanvas = document.getElementById("canvas-bg");
@@ -185,12 +221,10 @@ function initBackgroundCanvas() {
   resizeBg();
   window.addEventListener("resize", resizeBg);
   
-  // Animation Loop
   animateBg();
   
-  // click burst
   window.addEventListener("click", (e) => {
-    if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT") {
+    if (e.target.tagName !== "BUTTON" && e.target.tagName !== "INPUT" && !e.target.closest("#lock-track") && !e.target.closest("#scratch-canvas")) {
       spawnHeartsBurst(e.clientX, e.clientY);
     }
   });
@@ -276,15 +310,94 @@ function triggerBGConfettiBurst() {
   }
 }
 
+class Firework {
+  constructor(targetX, targetY) {
+    this.x = Math.random() * bgCanvas.width;
+    this.y = bgCanvas.height;
+    this.targetX = targetX;
+    this.targetY = targetY;
+    this.speed = Math.random() * 5 + 6;
+    this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+    this.speedX = Math.cos(this.angle) * this.speed;
+    this.speedY = Math.sin(this.angle) * this.speed;
+    this.size = 3;
+    this.color = `hsl(${Math.random() * 360}, 100%, 65%)`;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.speedY >= 0 || this.y <= this.targetY) {
+      explodeFirework(this.x, this.y, this.color);
+      return false; // delete
+    }
+    return true;
+  }
+
+  draw() {
+    bgCtx.save();
+    bgCtx.fillStyle = this.color;
+    bgCtx.beginPath();
+    bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    bgCtx.fill();
+    bgCtx.restore();
+  }
+}
+
+class FireworkParticle {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 2 + 1;
+    this.angle = Math.random() * Math.PI * 2;
+    this.speed = Math.random() * 4 + 1.5;
+    this.speedX = Math.cos(this.angle) * this.speed;
+    this.speedY = Math.sin(this.angle) * this.speed;
+    this.opacity = 1;
+    this.fade = Math.random() * 0.015 + 0.008;
+    this.gravity = 0.06;
+    this.color = color;
+  }
+
+  update() {
+    this.speedY += this.gravity;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.opacity -= this.fade;
+  }
+
+  draw() {
+    bgCtx.save();
+    bgCtx.globalAlpha = this.opacity;
+    bgCtx.fillStyle = this.color;
+    bgCtx.beginPath();
+    bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    bgCtx.fill();
+    bgCtx.restore();
+  }
+}
+
+function explodeFirework(x, y, color) {
+  for (let i = 0; i < 35; i++) {
+    fireworkParticles.push(new FireworkParticle(x, y, color));
+  }
+  if (audioCtx) {
+    playTone(180 + Math.random() * 100, 0.2, "sine", 0.04);
+  }
+}
+
 function animateBg() {
   bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
   
-  // Ambient floaters
   if (Math.random() < 0.02 && bgHearts.filter(h => h.speedY < 0).length < 18) {
     bgHearts.push(new BGHeart(Math.random() * bgCanvas.width, bgCanvas.height + 20));
   }
   
-  // Draw hearts
+  // Fireworks launch
+  if (isFireworksActive && Math.random() < 0.035 && fireworks.length < 5) {
+    fireworks.push(new Firework(Math.random() * bgCanvas.width, Math.random() * (bgCanvas.height * 0.5) + 50));
+  }
+  
   for (let i = bgHearts.length - 1; i >= 0; i--) {
     bgHearts[i].update();
     bgHearts[i].draw();
@@ -293,12 +406,29 @@ function animateBg() {
     }
   }
 
-  // Draw confetti
   for (let i = bgConfetti.length - 1; i >= 0; i--) {
     bgConfetti[i].update();
     bgConfetti[i].draw();
     if (bgConfetti[i].y > bgCanvas.height + 20) {
       bgConfetti.splice(i, 1);
+    }
+  }
+  
+  // Draw fireworks
+  for (let i = fireworks.length - 1; i >= 0; i--) {
+    if (!fireworks[i].update()) {
+      fireworks.splice(i, 1);
+    } else {
+      fireworks[i].draw();
+    }
+  }
+  
+  // Draw firework particles
+  for (let i = fireworkParticles.length - 1; i >= 0; i--) {
+    fireworkParticles[i].update();
+    fireworkParticles[i].draw();
+    if (fireworkParticles[i].opacity <= 0) {
+      fireworkParticles.splice(i, 1);
     }
   }
   
@@ -323,6 +453,8 @@ function goToLevel(levelId) {
     startTimelineFeatures();
   } else if (levelId === "level-typewriter") {
     startQuestTypewriter();
+  } else if (levelId === "level-scratch") {
+    startScratchFeatures();
   }
 }
 
@@ -338,43 +470,86 @@ function initGiftBox() {
     triggerBGConfettiBurst();
     
     setTimeout(() => {
-      goToLevel("level-greeting");
+      goToLevel("level-lock");
     }, 700);
   });
 }
 
 
-// --- LEVEL 1: GATEKEEPER QUIZ ---
-function initQuiz() {
-  const submitBtn = document.getElementById("quiz-submit-btn");
-  const inputField = document.getElementById("meet-input");
-  const errorMsg = document.getElementById("quiz-error-msg");
-  const card = inputField.closest(".glass-card");
-
-  submitBtn.addEventListener("click", () => {
-    const answer = inputField.value.trim().toLowerCase();
-    const correctAnswer = CONFIG.firstMetPlace.toLowerCase();
+// --- [NEW] LEVEL 1.5: THE HEART LOCK SLIDER ---
+function initLockSlider() {
+  const track = document.getElementById("lock-track");
+  const handle = document.getElementById("lock-handle");
+  const fill = document.getElementById("lock-fill");
+  
+  let isDragging = false;
+  let startX = 0;
+  let currentX = 0;
+  
+  const getPositionX = (e) => {
+    return e.type.includes("touch") ? e.touches[0].clientX : e.clientX;
+  };
+  
+  const onStart = (e) => {
+    isDragging = true;
+    startX = getPositionX(e) - handle.offsetLeft;
+    handle.style.transition = "none";
+    fill.style.transition = "none";
+  };
+  
+  const onMove = (e) => {
+    if (!isDragging) return;
     
-    if (answer === correctAnswer) {
-      errorMsg.classList.add("hidden");
+    const posX = getPositionX(e);
+    const maxDrag = track.clientWidth - handle.clientWidth - 8;
+    currentX = posX - startX;
+    
+    // Boundary checks
+    if (currentX < 4) currentX = 4;
+    if (currentX > maxDrag) currentX = maxDrag;
+    
+    handle.style.left = `${currentX}px`;
+    fill.style.width = `${currentX + handle.clientWidth / 2}px`;
+    
+    // Check if unlocked (dragged > 92% of track)
+    if (currentX >= maxDrag * 0.94) {
+      isDragging = false;
       playSuccessChime();
       triggerBGConfettiBurst();
-      goToLevel("level-greeting");
-    } else {
-      // Shake animation and show error
-      playErrorTone();
-      errorMsg.classList.remove("hidden");
-      card.classList.remove("shake-element");
-      void card.offsetWidth; // Trigger reflow to restart animation
-      card.classList.add("shake-element");
+      
+      // Animate slide-out finish
+      handle.style.transition = "all 0.2s";
+      fill.style.transition = "all 0.2s";
+      handle.style.left = `${maxDrag}px`;
+      fill.style.width = "100%";
+      
+      setTimeout(() => {
+        goToLevel("level-greeting");
+      }, 400);
     }
-  });
-
-  inputField.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      submitBtn.click();
-    }
-  });
+  };
+  
+  const onEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    // Reset to start if not fully unlocked
+    handle.style.transition = "left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
+    fill.style.transition = "width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
+    handle.style.left = "4px";
+    fill.style.width = "0%";
+    
+    if (audioCtx) playTone(180, 0.15, "sine", 0.15);
+  };
+  
+  handle.addEventListener("mousedown", onStart);
+  handle.addEventListener("touchstart", onStart);
+  
+  window.addEventListener("mousemove", onMove);
+  window.addEventListener("touchmove", onMove);
+  
+  window.addEventListener("mouseup", onEnd);
+  window.addEventListener("touchend", onEnd);
 }
 
 
@@ -382,6 +557,16 @@ function initQuiz() {
 function initGreeting() {
   const nextBtn = document.getElementById("greeting-next-btn");
   nextBtn.addEventListener("click", () => {
+    goToLevel("level-icecream-gate");
+  });
+}
+
+
+// --- LEVEL 2.5: ICE CREAM GATE ---
+function initIceCreamGate() {
+  const yesBtn = document.getElementById("icecream-yes-btn");
+  yesBtn.addEventListener("click", () => {
+    playSuccessChime();
     goToLevel("level-slider");
   });
 }
@@ -397,12 +582,10 @@ function initSlider() {
   const nextBtn = document.getElementById("slider-next");
   const proceedBtn = document.getElementById("slider-next-btn");
   
-  // Populated slides
   track.innerHTML = "";
   dotsContainer.innerHTML = "";
   
   CONFIG.slides.forEach((slide, idx) => {
-    // Create slide
     const slideElem = document.createElement("div");
     slideElem.classList.add("slide");
     
@@ -417,7 +600,6 @@ function initSlider() {
     `;
     track.appendChild(slideElem);
     
-    // Create dot
     const dot = document.createElement("div");
     dot.classList.add("slider-dot");
     if (idx === 0) dot.classList.add("active");
@@ -431,7 +613,6 @@ function initSlider() {
   const updateSlider = () => {
     track.style.transform = `translateX(-${currentSlide * 100}%)`;
     
-    // Update dots
     const dots = dotsContainer.querySelectorAll(".slider-dot");
     dots.forEach((dot, idx) => {
       if (idx === currentSlide) {
@@ -455,12 +636,125 @@ function initSlider() {
   });
   
   proceedBtn.addEventListener("click", () => {
-    goToLevel("level-song");
+    goToLevel("level-memory-match");
+    setupMemoryGame();
   });
 }
 
 
-// --- LEVEL 4: MUSIC RECORD PLAYER ---
+// --- [NEW] LEVEL 3.5: LOVE MATCH CARD GAME ---
+let firstCard = null;
+let secondCard = null;
+let lockGrid = false;
+let matchedCount = 0;
+
+function setupMemoryGame() {
+  const grid = document.getElementById("memory-grid");
+  grid.innerHTML = ""; // Clear
+  
+  firstCard = null;
+  secondCard = null;
+  lockGrid = false;
+  matchedCount = 0;
+  
+  // Match symbols: 3 pairs
+  const symbols = ["🍕", "🍕", "🍦", "🍦", "💖", "💖"];
+  
+  // Shuffle cards
+  symbols.sort(() => Math.random() - 0.5);
+  
+  symbols.forEach((symbol, index) => {
+    const card = document.createElement("div");
+    card.classList.add("memory-card");
+    card.dataset.symbol = symbol;
+    
+    card.innerHTML = `
+      <div class="memory-card-inner">
+        <div class="memory-card-side memory-card-front">❓</div>
+        <div class="memory-card-side memory-card-back">${symbol}</div>
+      </div>
+    `;
+    
+    card.addEventListener("click", () => flipCard(card));
+    grid.appendChild(card);
+  });
+}
+
+function flipCard(card) {
+  if (lockGrid) return;
+  if (card === firstCard) return;
+  if (card.classList.contains("matched")) return;
+  
+  playTone(550, 0.1, "sine", 0.12);
+  card.classList.add("flipped");
+  
+  if (!firstCard) {
+    firstCard = card;
+    return;
+  }
+  
+  secondCard = card;
+  lockGrid = true;
+  
+  checkForMatch();
+}
+
+function checkForMatch() {
+  const isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
+  
+  if (isMatch) {
+    disableCards();
+  } else {
+    unflipCards();
+  }
+}
+
+function disableCards() {
+  firstCard.classList.add("matched");
+  secondCard.classList.add("matched");
+  
+  playTone(750, 0.25, "sine", 0.15);
+  matchedCount += 2;
+  
+  // Confetti burst on match
+  const cardRect = secondCard.getBoundingClientRect();
+  spawnHeartsBurst(cardRect.left + cardRect.width / 2, cardRect.top + cardRect.height / 2);
+  
+  resetBoard();
+  
+  // Game completed
+  if (matchedCount === 6) {
+    setTimeout(() => {
+      playSuccessChime();
+      triggerBGConfettiBurst();
+      setTimeout(() => {
+        goToLevel("level-song");
+      }, 1200);
+    }, 500);
+  }
+}
+
+function unflipCards() {
+  playErrorTone();
+  
+  setTimeout(() => {
+    firstCard.classList.remove("flipped");
+    secondCard.classList.remove("flipped");
+    resetBoard();
+  }, 1000);
+}
+
+function resetBoard() {
+  [firstCard, secondCard] = [null, null];
+  lockGrid = false;
+}
+
+function initMemoryGame() {
+  // Config handled in setupMemoryGame() when navigated to
+}
+
+
+// --- LEVEL 4: MUSIC RECORD ---
 function initMusic() {
   const vinyl = document.getElementById("vinyl-player-btn");
   const stateText = document.getElementById("music-state-text");
@@ -481,30 +775,100 @@ function initMusic() {
   });
   
   nextBtn.addEventListener("click", () => {
+    goToLevel("level-reasons");
+  });
+}
+
+
+// --- [NEW] LEVEL 4.5: REASONS COMPLIMENT CHEST ---
+let reasonsOpened = 0;
+let openedIndices = [];
+
+function initReasonsBox() {
+  const chest = document.getElementById("chest-btn");
+  const icon = document.getElementById("chest-icon");
+  const displayBox = document.getElementById("reason-display-box");
+  const textElem = document.getElementById("reason-text");
+  const progressFill = document.getElementById("reason-progress-fill");
+  const countElem = document.getElementById("reasons-count");
+  const nextBtn = document.getElementById("reasons-next-btn");
+  
+  reasonsOpened = 0;
+  openedIndices = [];
+  
+  chest.addEventListener("click", () => {
+    if (openedIndices.length >= CONFIG.reasonsList.length) {
+      // All reasons opened, reset index array to allow repeats
+      openedIndices = [];
+    }
+    
+    // Animate chest jiggle
+    icon.style.transform = "scale(0.85)";
+    icon.innerText = "🔓";
+    playChime();
+    
+    setTimeout(() => {
+      icon.style.transform = "scale(1.1)";
+      setTimeout(() => { icon.style.transform = "scale(1)"; }, 150);
+      
+      // Revert chest icon back to 🎁 after 1.5 seconds
+      setTimeout(() => {
+        icon.innerText = "🎁";
+      }, 1500);
+      
+      // Get a random index that hasn't been opened yet in this round
+      let randIdx;
+      do {
+        randIdx = Math.floor(Math.random() * CONFIG.reasonsList.length);
+      } while (openedIndices.includes(randIdx) && openedIndices.length < CONFIG.reasonsList.length);
+      
+      openedIndices.push(randIdx);
+      
+      // Show compliment text
+      displayBox.classList.remove("hidden");
+      textElem.innerText = CONFIG.reasonsList[randIdx];
+      
+      // Confetti splash
+      const chestRect = chest.getBoundingClientRect();
+      spawnHeartsBurst(chestRect.left + chestRect.width / 2, chestRect.top + chestRect.height / 2);
+      
+      // Track progress
+      if (reasonsOpened < 3) {
+        reasonsOpened++;
+        countElem.innerText = reasonsOpened;
+        progressFill.style.width = `${(reasonsOpened / 3) * 100}%`;
+        
+        if (reasonsOpened === 3) {
+          playSuccessChime();
+          triggerBGConfettiBurst();
+          nextBtn.classList.remove("hidden");
+          nextBtn.classList.add("pulse-infinite");
+        }
+      }
+    }, 150);
+  });
+  
+  nextBtn.addEventListener("click", () => {
     goToLevel("level-timeline");
   });
 }
 
 
-// --- LEVEL 5: TIMELINE, COUNTER, CHAT ---
+// --- LEVEL 5: TIMELINE & LIVE COUNTER ---
 let countdownInterval = null;
 let chatIndex = 0;
 
 function startTimelineFeatures() {
-  // Reset fake chat
   const chatBox = document.getElementById("fake-chat-box");
   chatBox.innerHTML = "";
   chatIndex = 0;
   
-  // Load chats bubble-by-bubble
   loadNextChatBubble();
   
-  // Initialize Counter
   if (countdownInterval) clearInterval(countdownInterval);
   updateCounter();
   countdownInterval = setInterval(updateCounter, 1000);
   
-  // Populate Milestones
   populateTimeline();
 }
 
@@ -512,7 +876,7 @@ function initTimelineAndCounter() {
   const nextBtn = document.getElementById("timeline-next-btn");
   nextBtn.addEventListener("click", () => {
     if (countdownInterval) clearInterval(countdownInterval);
-    goToLevel("level-game");
+    goToLevel("level-game-gate");
   });
 }
 
@@ -527,20 +891,17 @@ function updateCounter() {
     return;
   }
   
-  // Precise conversion values
   const msInSec = 1000;
   const msInMin = 60 * 1000;
   const msInHour = 60 * 60 * 1000;
   const msInDay = 24 * 60 * 60 * 1000;
   
-  // Approximate years and months
   let years = now.getFullYear() - startDate.getFullYear();
   let months = now.getMonth() - startDate.getMonth();
   let days = now.getDate() - startDate.getDate();
   
   if (days < 0) {
     months--;
-    // Get last day of previous month
     const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
     days += prevMonth.getDate();
   }
@@ -578,14 +939,11 @@ function loadNextChatBubble() {
   chatBox.appendChild(bubble);
   chatBox.scrollTop = chatBox.scrollHeight;
   
-  // Play subtle bubble chime
   if (audioCtx && chatIndex > 0) {
     playTone(700 + Math.random() * 100, 0.05, "sine", 0.08);
   }
   
   chatIndex++;
-  
-  // Auto-scroll inside chat
   setTimeout(loadNextChatBubble, 1800);
 }
 
@@ -600,7 +958,6 @@ function populateTimeline() {
     itemElem.innerHTML = `
       <div class="timeline-dot"></div>
       <div class="timeline-card">
-        <div class="timeline-date">${item.date}</div>
         <h4>${item.title}</h4>
         <p>${item.desc}</p>
       </div>
@@ -609,9 +966,7 @@ function populateTimeline() {
     container.appendChild(itemElem);
   });
   
-  // Scroll reveal logic
   const cards = container.querySelectorAll(".timeline-card");
-  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -622,8 +977,17 @@ function populateTimeline() {
   
   cards.forEach(card => {
     observer.observe(card);
-    // Fallback if not fully intersecting or no support
     setTimeout(() => card.classList.add("visible"), 600);
+  });
+}
+
+
+// --- LEVEL 5.5: GAMING GATE ---
+function initGameGate() {
+  const yesBtn = document.getElementById("game-gate-yes-btn");
+  yesBtn.addEventListener("click", () => {
+    playSuccessChime();
+    goToLevel("level-game");
   });
 }
 
@@ -640,7 +1004,6 @@ function initGame() {
   gameCtx = gameCanvas.getContext("2d");
   
   const startBtn = document.getElementById("game-start-btn");
-  
   startBtn.addEventListener("click", () => {
     document.getElementById("game-overlay").classList.add("hidden");
     startGame();
@@ -651,7 +1014,7 @@ class FallingHeart {
   constructor() {
     this.x = Math.random() * (gameCanvas.width - 30) + 15;
     this.y = -20;
-    this.size = Math.random() * 12 + 10; // Radius
+    this.size = Math.random() * 12 + 10;
     this.speed = Math.random() * 2 + 1.2;
     this.color = `hsl(${Math.random() * 20 + 340}, 95%, 60%)`;
   }
@@ -678,7 +1041,6 @@ class FallingHeart {
   }
 
   isClicked(mx, my) {
-    // Expand collision box slightly for comfortable mobile tapping
     const dist = Math.hypot(mx - this.x, my - this.y);
     return dist < (this.size * 1.8);
   }
@@ -690,16 +1052,13 @@ function startGame() {
   gameHearts = [];
   document.getElementById("game-score").innerText = "0";
   
-  // Resize Canvas to container
   const container = gameCanvas.parentElement;
   gameCanvas.width = container.clientWidth;
   gameCanvas.height = container.clientHeight;
   
-  // Register click / touch
   gameCanvas.addEventListener("mousedown", handleGameClick);
   gameCanvas.addEventListener("touchstart", handleGameTouch);
   
-  // Run Game loop
   gameLoop();
 }
 
@@ -713,7 +1072,7 @@ function handleGameClick(e) {
 
 function handleGameTouch(e) {
   if (!gameActive) return;
-  e.preventDefault(); // Prevent double clicks
+  e.preventDefault();
   const rect = gameCanvas.getBoundingClientRect();
   const touch = e.touches[0];
   const mx = touch.clientX - rect.left;
@@ -724,10 +1083,8 @@ function handleGameTouch(e) {
 function checkHit(mx, my) {
   for (let i = gameHearts.length - 1; i >= 0; i--) {
     if (gameHearts[i].isClicked(mx, my)) {
-      // Hit!
       playTone(550 + Math.random() * 200, 0.1, "sine", 0.2);
       
-      // Explode sparks on bg canvas
       const canvasRect = gameCanvas.getBoundingClientRect();
       spawnHeartsBurst(mx + canvasRect.left, my + canvasRect.top);
       
@@ -752,14 +1109,14 @@ function endGame(win) {
   
   const overlay = document.getElementById("game-overlay");
   overlay.innerHTML = `
-    <h3 class="color-pink pulse-infinite">You Unlocked Level 7! 🔓</h3>
-    <p class="margin-t-sm">Perfect score caught! You're ready for the romantic whisper...</p>
-    <button class="btn btn-primary margin-t-md" id="game-next-btn">Proceed to Level 7 💌</button>
+    <h3 class="color-pink pulse-infinite">You Unlocked Level 6.5! 🔓</h3>
+    <p class="margin-t-sm">Game won! Prepare for a scratch surprises...</p>
+    <button class="btn btn-primary margin-t-md" id="game-next-btn">Proceed to Scratch Card 🎫</button>
   `;
   overlay.classList.remove("hidden");
   
   document.getElementById("game-next-btn").addEventListener("click", () => {
-    goToLevel("level-typewriter");
+    goToLevel("level-scratch");
   });
   
   playSuccessChime();
@@ -771,23 +1128,164 @@ function gameLoop() {
   
   gameCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   
-  // Random Spawn
   if (Math.random() < 0.035 && gameHearts.length < 8) {
     gameHearts.push(new FallingHeart());
   }
   
-  // Update and draw falling hearts
   for (let i = gameHearts.length - 1; i >= 0; i--) {
     gameHearts[i].update();
     gameHearts[i].draw();
     
-    // Check if missed (out of bounds)
     if (gameHearts[i].y > gameCanvas.height + 25) {
       gameHearts.splice(i, 1);
     }
   }
   
   gameLoopId = requestAnimationFrame(gameLoop);
+}
+
+
+// --- [NEW] LEVEL 6.5: VIRTUAL SCRATCH CARD ---
+let scratchCanvas, scratchCtx;
+let isScratching = false;
+
+function startScratchFeatures() {
+  const under = document.getElementById("scratch-under-text");
+  const nextBtn = document.getElementById("scratch-next-btn");
+  
+  under.innerText = CONFIG.scratchCardMessage;
+  nextBtn.classList.add("hidden");
+  
+  scratchCanvas = document.getElementById("scratch-canvas");
+  scratchCtx = scratchCanvas.getContext("2d");
+  
+  const container = scratchCanvas.parentElement;
+  scratchCanvas.width = container.clientWidth;
+  scratchCanvas.height = container.clientHeight;
+  
+  // Fill solid silver coat
+  scratchCtx.fillStyle = "#8e9aaf";
+  scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+  
+  // Add some sparkles overlay texture
+  for (let i = 0; i < 400; i++) {
+    scratchCtx.fillStyle = Math.random() < 0.5 ? "#a2aebb" : "#727d8c";
+    scratchCtx.fillRect(Math.random() * scratchCanvas.width, Math.random() * scratchCanvas.height, 2, 2);
+  }
+  
+  // Draw instruction text on top
+  scratchCtx.fillStyle = "#fff";
+  scratchCtx.font = "bold 1.25rem Outfit, sans-serif";
+  scratchCtx.textAlign = "center";
+  scratchCtx.textBaseline = "middle";
+  scratchCtx.fillText("❤️ SCRATCH ME ❤️", scratchCanvas.width / 2, scratchCanvas.height / 2);
+  
+  // Listeners
+  scratchCanvas.addEventListener("mousedown", startDrawing);
+  scratchCanvas.addEventListener("touchstart", startDrawing);
+  
+  scratchCanvas.addEventListener("mousemove", drawScratch);
+  scratchCanvas.addEventListener("touchmove", drawScratch);
+  
+  window.addEventListener("mouseup", stopDrawing);
+  window.addEventListener("touchend", stopDrawing);
+}
+
+function startDrawing(e) {
+  isScratching = true;
+  drawScratch(e);
+}
+
+function drawScratch(e) {
+  if (!isScratching) return;
+  e.preventDefault();
+  
+  const rect = scratchCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+  
+  // Erase pixels
+  scratchCtx.globalCompositeOperation = "destination-out";
+  scratchCtx.beginPath();
+  scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
+  scratchCtx.fill();
+  
+  // Occasional sound tick
+  if (Math.random() < 0.15 && audioCtx) {
+    playTone(350 + Math.random() * 80, 0.03, "sine", 0.05);
+  }
+  
+  // Calculate percentage cleared
+  checkScratchPercentage();
+}
+
+function checkScratchPercentage() {
+  const nextBtn = document.getElementById("scratch-next-btn");
+  if (!nextBtn.classList.contains("hidden")) return; // already revealed
+  
+  // Sample pixels on a 15x15 lightweight grid
+  const cols = 15;
+  const rows = 15;
+  const stepX = scratchCanvas.width / cols;
+  const stepY = scratchCanvas.height / rows;
+  
+  let clearedCount = 0;
+  
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++) {
+      const px = Math.floor(c * stepX + stepX / 2);
+      const py = Math.floor(r * stepY + stepY / 2);
+      
+      const imgData = scratchCtx.getImageData(px, py, 1, 1);
+      const alpha = imgData.data[3]; // get alpha channel (0 to 255)
+      
+      // If fully transparent (scratched off)
+      if (alpha === 0) {
+        clearedCount++;
+      }
+    }
+  }
+  
+  const percentCleared = (clearedCount / (cols * rows)) * 100;
+  
+  const progressText = document.getElementById("scratch-progress-text");
+  if (progressText) {
+    progressText.innerText = `Scratched: ${Math.round(percentCleared)}%`;
+  }
+  
+  // When 45% cleared, fade out remaining silver cover
+  if (percentCleared >= 45) {
+    if (progressText) {
+      progressText.innerText = "Unlocked! 🎁";
+    }
+    scratchCanvas.style.transition = "opacity 0.8s";
+    scratchCanvas.style.opacity = "0";
+    
+    scratchCanvas.removeEventListener("mousedown", startDrawing);
+    scratchCanvas.removeEventListener("touchstart", startDrawing);
+    scratchCanvas.removeEventListener("mousemove", drawScratch);
+    scratchCanvas.removeEventListener("touchmove", drawScratch);
+    
+    playSuccessChime();
+    triggerBGConfettiBurst();
+    
+    setTimeout(() => {
+      scratchCanvas.remove();
+      nextBtn.classList.remove("hidden");
+      nextBtn.classList.add("pulse-infinite");
+    }, 800);
+  }
+}
+
+function stopDrawing() {
+  isScratching = false;
+}
+
+function initScratchCard() {
+  // Configured in startScratchFeatures()
 }
 
 
@@ -807,14 +1305,12 @@ function startQuestTypewriter() {
       container.innerHTML += textToType.charAt(charIndex);
       charIndex++;
       
-      // Play soft sound occasionally
       if (charIndex % 3 === 0 && audioCtx) {
         playTone(620 + Math.random() * 150, 0.02, "sine", 0.08);
       }
       
       setTimeout(type, 45);
     } else {
-      // Typing done, show proceed btn
       setTimeout(() => {
         nextBtn.classList.remove("hidden");
         triggerBGConfettiBurst();
@@ -852,26 +1348,102 @@ function initCard() {
 }
 
 
-// --- LEVEL 9: LAST SURPRISE (LOVE ME) ---
-function initLastSurprise() {
-  const loveBtn = document.getElementById("love-only-btn");
+// --- LEVEL 9: LAST SURPRISE QUESTION CHAIN ---
+function initLastSurpriseChain() {
+  const q1Yes = document.getElementById("chain-q1-yes");
+  const q2Yes = document.getElementById("chain-q2-yes");
+  const finalLoveBtn = document.getElementById("love-only-btn");
+  
+  const q1Div = document.getElementById("chain-q1");
+  const q2Div = document.getElementById("chain-q2");
+  const q3Div = document.getElementById("chain-q3");
+  
   const promptDiv = document.getElementById("last-surprise-prompt");
   const revealDiv = document.getElementById("last-surprise-reveal");
   const photo = document.getElementById("reveal-favorite-photo");
   
-  loveBtn.addEventListener("click", () => {
+  q1Yes.addEventListener("click", () => {
     playSuccessChime();
-    
-    // Setup favorite image source
+    q1Div.classList.add("hidden");
+    q2Div.classList.remove("hidden");
+    q2Div.classList.add("fade-in");
+  });
+  
+  q2Yes.addEventListener("click", () => {
+    playSuccessChime();
+    q2Div.classList.add("hidden");
+    q3Div.classList.remove("hidden");
+    q3Div.classList.add("fade-in");
+  });
+  
+  finalLoveBtn.addEventListener("click", () => {
+    playSuccessChime();
     photo.src = CONFIG.favoritePhoto;
+    isFireworksActive = true; // Start the fireworks!
     
-    // Explode hearts and confetti in columns
     triggerBGConfettiBurst();
     setTimeout(triggerBGConfettiBurst, 400);
     setTimeout(triggerBGConfettiBurst, 800);
+    
+    // Continuously spawn confetti every 2.5 seconds on the final screen!
+    setInterval(triggerBGConfettiBurst, 2500);
     
     promptDiv.classList.add("hidden");
     revealDiv.classList.remove("hidden");
     revealDiv.classList.add("fade-in");
   });
+}
+
+
+// --- EVASIVE WRONG OPTIONS HANDLER ---
+function initEvasiveButtons() {
+  const evasiveBtns = document.querySelectorAll(".evasive");
+  
+  evasiveBtns.forEach(btn => {
+    const container = btn.closest(".gate-options-container") || btn.closest(".quiz-options-container");
+    
+    const evadeHandler = (e) => {
+      evadeButton(btn, container);
+    };
+    
+    btn.addEventListener("mouseover", evadeHandler);
+    btn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      evadeButton(btn, container);
+    });
+    btn.addEventListener("click", (e) => {
+      evadeButton(btn, container);
+    });
+  });
+}
+
+function evadeButton(btn, container) {
+  if (!container) return;
+  
+  const wrapper = btn.parentElement;
+  if (wrapper) {
+    wrapper.style.position = "static";
+  }
+
+  const containerRect = container.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  
+  const maxX = containerRect.width - btnRect.width;
+  const maxY = containerRect.height - btnRect.height;
+  
+  const newX = Math.random() * maxX;
+  const newY = Math.random() * (maxY - 20) + 10;
+  
+  btn.style.position = "absolute";
+  btn.style.left = `${newX}px`;
+  btn.style.top = `${newY}px`;
+  
+  const currentScale = parseFloat(btn.style.transform.replace("scale(", "").replace(")", "")) || 1;
+  if (currentScale > 0.6) {
+    btn.style.transform = `scale(${currentScale - 0.08})`;
+  }
+  
+  if (audioCtx) {
+    playTone(180, 0.08, "sine", 0.15);
+  }
 }
