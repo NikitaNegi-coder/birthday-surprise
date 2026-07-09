@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Birthday surprise For You ❤️</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Effect Canvas (Confetti, Fireworks, Floating Hearts) -->
+  <canvas id="canvas-bg"></canvas>
+  
+  <!-- Mouse Pointer Hearts Container -->
+  <div id="hearts-pointer-container"></div>
+
+  <main id="app">
+
+    <!-- LANDING PAGE: THE GIFT BOX -->
+    <section id="level-landing" class="level active">
+      <div class="glass-card text-center">
+        <div class="badge">A Special Message</div>
+        <h1 class="glow-text margin-b-lg">🎁 You have 1 birthday surprise!</h1>
+        <p class="helper-text margin-b-xl">Tap the glowing present to unbox your surprise...</p>
+        
+        <div class="gift-box-wrapper">
+          <div class="gift-box" id="gift-box-elem">
+            <div class="gift-box-lid"></div>
+            <div class="gift-box-ribbon-horizontal"></div>
+            <div class="gift-box-ribbon-vertical"></div>
+            <div class="gift-box-bow"></div>
+            <div class="gift-box-body"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 1: THE MEET QUIZ -->
+    <section id="level-quiz" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 1: The Verification</div>
+        <h2 class="margin-b-md">Before you continue... Answer this 😏</h2>
+        <p class="quiz-question-txt margin-tb-lg">Where did we first meet?</p>
+        
+        <div class="input-container">
+          <input type="text" id="meet-input" placeholder="Type the place name here..." autocomplete="off">
+          <p id="quiz-error-msg" class="error-text hidden">Nope, that's not it! Try again... 🥺</p>
+        </div>
+        
+        <button class="btn btn-primary margin-t-lg" id="quiz-submit-btn">Unlock Surprise 🔓</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 2: GREETING -->
+    <section id="level-greeting" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 2: Welcome</div>
+        <h2 class="handwritten color-pink margin-b-md">Hi Love ❤️</h2>
+        <div class="greeting-content margin-tb-lg">
+          <p class="text-lg">Today is all about celebrating you.</p>
+          <p class="text-md margin-t-sm">I made something special because you deserve more than just a text.</p>
+          <p class="text-lg margin-t-md font-bold">Ready?</p>
+        </div>
+        <button class="btn btn-primary margin-t-lg" id="greeting-next-btn">Open Next Surprise ✨</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 3: PHOTO GALLERY SLIDER -->
+    <section id="level-slider" class="level">
+      <div class="glass-card text-center overflow-hidden">
+        <div class="badge">Level 3: Memory Slideshow</div>
+        <h2 class="margin-b-md">Moments with You 📸</h2>
+        
+        <div class="slider-container">
+          <div class="slider-track" id="slider-track">
+            <!-- Dynamic slides from config -->
+          </div>
+          <button class="slider-arrow prev" id="slider-prev">&#10094;</button>
+          <button class="slider-arrow next" id="slider-next">&#10095;</button>
+        </div>
+        
+        <div class="slider-dots" id="slider-dots">
+          <!-- Dynamic dots -->
+        </div>
+        
+        <button class="btn btn-primary margin-t-xl" id="slider-next-btn">Proceed to Level 4 🎵</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 4: MUSIC -->
+    <section id="level-song" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 4: Our Song</div>
+        <h2 class="margin-b-md">This song always reminds me of us... ❤️</h2>
+        
+        <div class="music-player-container margin-tb-xl">
+          <div class="vinyl-record-large" id="vinyl-player-btn">
+            <div class="vinyl-center-large"></div>
+          </div>
+          <p id="music-state-text" class="helper-text margin-t-md">Click the record to play 🎵</p>
+        </div>
+        
+        <button class="btn btn-primary" id="music-next-btn">Continue to Level 5 ⏳</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 5: TIMELINE & COUNTER -->
+    <section id="level-timeline" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 5: Memory Lane & Counter</div>
+        
+        <!-- Live Countdown Clock -->
+        <div class="counter-box margin-b-lg">
+          <h3>How long we've been together:</h3>
+          <div id="countdown-timer" class="countdown-display">
+            <!-- Ticking timer -->
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Fake Chat Animation Recreator -->
+        <div class="chat-container-box margin-tb-lg">
+          <h4>💬 How we first talked:</h4>
+          <div class="fake-chat-box" id="fake-chat-box">
+            <!-- Messages load one by one -->
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Timeline -->
+        <h3 class="margin-t-lg">❤️ Our Relationship Milestones</h3>
+        <div class="timeline" id="timeline-container">
+          <!-- Timeline elements dynamic -->
+        </div>
+
+        <button class="btn btn-primary margin-t-xl" id="timeline-next-btn">Go to Level 6 🎮</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 6: GAME (CATCH THE HEARTS) -->
+    <section id="level-game" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 6: Mini-Game</div>
+        <h2 class="margin-b-sm">Catch the Hearts! ❤️</h2>
+        <p class="helper-text margin-b-md">Catch 10 falling hearts to unlock the next level!</p>
+        
+        <div class="game-container">
+          <div class="game-score-board">
+            <span>Score: <strong id="game-score">0</strong>/10</span>
+          </div>
+          <canvas id="game-canvas"></canvas>
+          <div id="game-overlay" class="game-overlay-screen">
+            <h3>Are you ready?</h3>
+            <p>Use your finger or mouse to click/tap the hearts before they reach the bottom!</p>
+            <button class="btn btn-primary margin-t-md" id="game-start-btn">Start Game 🕹️</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 7: LETTERS TYPEWRITER -->
+    <section id="level-typewriter" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">Level 7: Whisper</div>
+        
+        <div class="typewriter-box">
+          <div id="typewriter-quest-output" class="typewriter-text handwritten text-xl">
+            <!-- Text typed here -->
+          </div>
+        </div>
+        
+        <button class="btn btn-primary margin-t-xl hidden" id="typewriter-next-btn">Open Final Surprise 🎂</button>
+      </div>
+    </section>
+
+    <!-- LEVEL 8: FINAL CARD -->
+    <section id="level-card" class="level">
+      <div class="glass-card final-card-outer">
+        <div class="badge">Happy Birthday! 🎂</div>
+        
+        <div class="bday-card-unfold">
+          <h1 class="glow-text text-3d color-pink margin-b-md">🎉 HAPPY BIRTHDAY LOVE 🎉</h1>
+          <div class="bday-card-body text-center" id="bday-card-text">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+        
+        <div class="text-center margin-t-xl">
+          <button class="btn btn-primary glow-btn-bday" id="card-next-btn">One Last Surprise... 🌹</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 9: LAST SURPRISE (LOVE ME) -->
+    <section id="level-last" class="level">
+      <div class="glass-card text-center">
+        <div class="badge">The End</div>
+        
+        <div id="last-surprise-prompt" class="fade-in">
+          <h2 class="margin-b-lg">A final choice... 😏</h2>
+          <button class="btn btn-primary btn-lg pulse-infinite" id="love-only-btn">Click only if you love me 😏</button>
+        </div>
+        
+        <div id="last-surprise-reveal" class="hidden text-center">
+          <h2 class="handwritten color-pink text-3d pulse-infinite text-xxl">YES!</h2>
+          <p class="text-lg margin-tb-md">I love you more than words can express! ❤️</p>
+          
+          <div class="heart-frame-wrapper">
+            <div class="heart-frame">
+              <img id="reveal-favorite-photo" src="" alt="Favorite memory together">
+            </div>
+          </div>
+          
+          <h1 class="handwritten color-gold margin-t-lg font-bold glow-gold">Forever with you ❤️</h1>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script Imports -->
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
