@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initBackgroundCanvas();
   initGiftBox();
   initLockSlider();
+  initBabyIntro();
   initGreeting();
   initIceCreamGate();
   initSlider();
@@ -18,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initCard();
   initLastSurpriseChain();
   initEvasiveButtons();
+  initSecretHeart();
+  initFinalStarryEnding();
 });
 
 // --- AUDIO SYNTHESIZER (MUSIC BOX TUNE) ---
@@ -26,6 +29,8 @@ let musicInterval = null;
 let isPlaying = false;
 let currentNoteIndex = 0;
 let notesInterval = null;
+let bgAudio = null;
+let isUsingSynth = false;
 
 const MELODY = [
   { freq: 392.00, dur: 0.75 }, // G4
@@ -79,6 +84,7 @@ function playTone(freq, duration, type = "triangle", gainValue = 0.25) {
   
   gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
   gainNode.gain.linearRampToValueAtTime(gainValue, audioCtx.currentTime + 0.04);
+  gainNode.gain.setValueAtTime(gainValue, audioCtx.currentTime + 0.04); // Set start value for exponential ramp
   gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
   
   osc.connect(gainNode);
@@ -107,15 +113,51 @@ function playSuccessChime() {
 
 function startMusic() {
   isPlaying = true;
-  currentNoteIndex = 0;
-  playNextNote();
+  isUsingSynth = false;
   
   if (notesInterval) clearInterval(notesInterval);
   notesInterval = setInterval(spawnFloatingNote, 400);
+  
+  // Synchronize UI elements
+  const floatBtn = document.getElementById("floating-music-btn");
+  if (floatBtn) {
+    floatBtn.classList.add("playing");
+    const tooltip = floatBtn.querySelector(".music-tooltip");
+    if (tooltip) tooltip.innerText = "Pause Tune ⏸️";
+  }
+  const mainVinyl = document.getElementById("vinyl-player-btn");
+  if (mainVinyl) {
+    mainVinyl.classList.add("playing");
+  }
+  const stateText = document.getElementById("music-state-text");
+  if (stateText) {
+    stateText.innerText = "Playing a sweet birthday tune for my love... 🎵";
+  }
+  
+  // Start the lyric text typing overlay if on Level 4
+  const activeSongLevel = document.getElementById("level-song");
+  if (activeSongLevel && activeSongLevel.classList.contains("active")) {
+    startLyricsOverlay();
+  }
+  
+  if (!bgAudio) {
+    bgAudio = new Audio("https://www.chosic.com/wp-content/uploads/2022/09/Happy-Birthday-Music-Box.mp3");
+    bgAudio.loop = true;
+  }
+  
+  bgAudio.play().then(() => {
+    console.log("Playing Happy Birthday MP3 music box...");
+  }).catch(err => {
+    console.warn("HTML5 audio playback blocked or failed, falling back to synth melody:", err);
+    // Fallback to Web Audio synthesizer
+    isUsingSynth = true;
+    currentNoteIndex = 0;
+    playNextNote();
+  });
 }
 
 function playNextNote() {
-  if (!isPlaying) return;
+  if (!isPlaying || !isUsingSynth) return;
   
   const noteObj = MELODY[currentNoteIndex];
   const beatDuration = 0.55; // 110 bpm approx
@@ -129,6 +171,30 @@ function playNextNote() {
 
 function stopMusic() {
   isPlaying = false;
+  isUsingSynth = false;
+  
+  // Stop lyrics overlay
+  stopLyricsOverlay();
+  
+  // Synchronize UI elements
+  const floatBtn = document.getElementById("floating-music-btn");
+  if (floatBtn) {
+    floatBtn.classList.remove("playing");
+    const tooltip = floatBtn.querySelector(".music-tooltip");
+    if (tooltip) tooltip.innerText = "Play Tune 🎵";
+  }
+  const mainVinyl = document.getElementById("vinyl-player-btn");
+  if (mainVinyl) {
+    mainVinyl.classList.remove("playing");
+  }
+  const stateText = document.getElementById("music-state-text");
+  if (stateText) {
+    stateText.innerText = "Paused 🎵 Click to resume";
+  }
+  
+  if (bgAudio) {
+    bgAudio.pause();
+  }
   if (musicInterval) {
     clearTimeout(musicInterval);
   }
@@ -448,8 +514,37 @@ function goToLevel(levelId) {
   playChime();
   triggerBGConfettiBurst();
   
+  // Toggle floating music button visibility
+  const floatMusicBtn = document.getElementById("floating-music-btn");
+  if (floatMusicBtn) {
+    if (levelId === "level-landing" || levelId === "level-lock") {
+      floatMusicBtn.classList.add("hidden");
+    } else {
+      floatMusicBtn.classList.remove("hidden");
+    }
+  }
+  
+  // Toggle secret heart button visibility
+  const secretHeart = document.getElementById("secret-heart-btn");
+  if (secretHeart) {
+    if (levelId === "level-landing" || levelId === "level-lock") {
+      secretHeart.style.display = "none";
+    } else {
+      secretHeart.style.display = "flex";
+    }
+  }
+  
   // Level-specific initialization hook
-  if (levelId === "level-timeline") {
+  if (levelId === "level-baby-intro") {
+    startBabyIntro();
+  } else if (levelId === "level-greeting") {
+    startGreetingMorph();
+  } else if (levelId === "level-song") {
+    // If music is already playing, display lyrics immediately
+    if (isPlaying) {
+      startLyricsOverlay();
+    }
+  } else if (levelId === "level-timeline") {
     startTimelineFeatures();
   } else if (levelId === "level-typewriter") {
     startQuestTypewriter();
@@ -511,6 +606,18 @@ function initLockSlider() {
     handle.style.left = `${currentX}px`;
     fill.style.width = `${currentX + handle.clientWidth / 2}px`;
     
+    // Dynamically accelerate the heartbeat pulse animation based on drag progress
+    const progress = (currentX - 4) / (maxDrag - 4 || 1);
+    if (progress > 0.72) {
+      handle.classList.remove("pulse-fast");
+      handle.classList.add("pulse-very-fast");
+    } else if (progress > 0.35) {
+      handle.classList.remove("pulse-very-fast");
+      handle.classList.add("pulse-fast");
+    } else {
+      handle.classList.remove("pulse-fast", "pulse-very-fast");
+    }
+    
     // Check if unlocked (dragged > 92% of track)
     if (currentX >= maxDrag * 0.94) {
       isDragging = false;
@@ -522,9 +629,10 @@ function initLockSlider() {
       fill.style.transition = "all 0.2s";
       handle.style.left = `${maxDrag}px`;
       fill.style.width = "100%";
+      handle.classList.remove("pulse-fast", "pulse-very-fast");
       
       setTimeout(() => {
-        goToLevel("level-greeting");
+        goToLevel("level-baby-intro");
       }, 400);
     }
   };
@@ -538,6 +646,9 @@ function initLockSlider() {
     fill.style.transition = "width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25)";
     handle.style.left = "4px";
     fill.style.width = "0%";
+    
+    // Reset heartbeat speed
+    handle.classList.remove("pulse-fast", "pulse-very-fast");
     
     if (audioCtx) playTone(180, 0.15, "sine", 0.15);
   };
@@ -555,6 +666,10 @@ function initLockSlider() {
 
 // --- LEVEL 2: GREETING ---
 function initGreeting() {
+  const photo = document.getElementById("welcome-hero-photo");
+  if (photo) {
+    photo.src = CONFIG.favoritePhoto;
+  }
   const nextBtn = document.getElementById("greeting-next-btn");
   nextBtn.addEventListener("click", () => {
     goToLevel("level-icecream-gate");
@@ -572,67 +687,61 @@ function initIceCreamGate() {
 }
 
 
-// --- LEVEL 3: POLAROID SLIDER ---
-let currentSlide = 0;
-
+// --- LEVEL 3: POLAROID CARD DECK ---
 function initSlider() {
-  const track = document.getElementById("slider-track");
-  const dotsContainer = document.getElementById("slider-dots");
-  const prevBtn = document.getElementById("slider-prev");
-  const nextBtn = document.getElementById("slider-next");
+  const deck = document.getElementById("polaroid-card-deck");
+  const progressText = document.getElementById("deck-progress-text");
   const proceedBtn = document.getElementById("slider-next-btn");
   
-  track.innerHTML = "";
-  dotsContainer.innerHTML = "";
+  deck.innerHTML = "";
+  proceedBtn.classList.add("hidden");
   
-  CONFIG.slides.forEach((slide, idx) => {
-    const slideElem = document.createElement("div");
-    slideElem.classList.add("slide");
+  let currentCardIndex = 0;
+  const totalCards = CONFIG.slides.length;
+  
+  progressText.innerText = `Card 1 / ${totalCards}`;
+  
+  // Render cards in reverse order so the first card in config sits on top (highest z-index)
+  CONFIG.slides.slice().reverse().forEach((slide, reverseIdx) => {
+    const trueIdx = totalCards - 1 - reverseIdx;
     
-    slideElem.innerHTML = `
-      <div class="slide-img-box">
-        <img src="${slide.image}" alt="${slide.title}">
-      </div>
-      <div class="slide-caption-box">
-        <h3>${slide.title}</h3>
+    const card = document.createElement("div");
+    card.classList.add("polaroid-card");
+    card.style.zIndex = `${reverseIdx + 1}`;
+    
+    // Add random rotations/offsets for stacked look
+    const randomRot = (Math.random() * 8 - 4).toFixed(1); // -4 to 4 degrees
+    const randomOffset = (Math.random() * 6 - 3).toFixed(0); // -3px to 3px
+    card.style.transform = `rotate(${randomRot}deg) translate(${randomOffset}px, ${randomOffset}px)`;
+    
+    card.innerHTML = `
+      <img src="${slide.image}" alt="${slide.title}">
+      <div class="polaroid-caption">
+        <h4>${slide.title}</h4>
         <p>${slide.desc}</p>
       </div>
     `;
-    track.appendChild(slideElem);
     
-    const dot = document.createElement("div");
-    dot.classList.add("slider-dot");
-    if (idx === 0) dot.classList.add("active");
-    dot.addEventListener("click", () => {
-      currentSlide = idx;
-      updateSlider();
-    });
-    dotsContainer.appendChild(dot);
-  });
-  
-  const updateSlider = () => {
-    track.style.transform = `translateX(-${currentSlide * 100}%)`;
-    
-    const dots = dotsContainer.querySelectorAll(".slider-dot");
-    dots.forEach((dot, idx) => {
-      if (idx === currentSlide) {
-        dot.classList.add("active");
-      } else {
-        dot.classList.remove("active");
+    // Swipe top card off the stack on click
+    card.addEventListener("click", () => {
+      if (trueIdx === currentCardIndex) {
+        card.classList.add("swipe-off");
+        playChime();
+        triggerBGConfettiBurst();
+        
+        currentCardIndex++;
+        
+        if (currentCardIndex < totalCards) {
+          progressText.innerText = `Card ${currentCardIndex + 1} / ${totalCards}`;
+        } else {
+          progressText.innerText = "All memories viewed! ❤️";
+          proceedBtn.classList.remove("hidden");
+          proceedBtn.classList.add("pulse-infinite");
+        }
       }
     });
-  };
-  
-  prevBtn.addEventListener("click", () => {
-    currentSlide = (currentSlide - 1 + CONFIG.slides.length) % CONFIG.slides.length;
-    updateSlider();
-    if (audioCtx) playTone(440, 0.1, "sine", 0.1);
-  });
-  
-  nextBtn.addEventListener("click", () => {
-    currentSlide = (currentSlide + 1) % CONFIG.slides.length;
-    updateSlider();
-    if (audioCtx) playTone(440, 0.1, "sine", 0.1);
+    
+    deck.appendChild(card);
   });
   
   proceedBtn.addEventListener("click", () => {
@@ -757,22 +866,28 @@ function initMemoryGame() {
 // --- LEVEL 4: MUSIC RECORD ---
 function initMusic() {
   const vinyl = document.getElementById("vinyl-player-btn");
-  const stateText = document.getElementById("music-state-text");
   const nextBtn = document.getElementById("music-next-btn");
   
   vinyl.addEventListener("click", () => {
     initAudioContext();
     if (isPlaying) {
       stopMusic();
-      vinyl.classList.remove("playing");
-      stateText.innerText = "Paused 🎵 Click to resume";
     } else {
       startMusic();
-      vinyl.classList.add("playing");
-      stateText.innerText = "Playing 'Happy Birthday' Music Box... 🎵";
-      triggerBGConfettiBurst();
     }
   });
+  
+  const floatBtn = document.getElementById("floating-music-btn");
+  if (floatBtn) {
+    floatBtn.addEventListener("click", () => {
+      initAudioContext();
+      if (isPlaying) {
+        stopMusic();
+      } else {
+        startMusic();
+      }
+    });
+  }
   
   nextBtn.addEventListener("click", () => {
     goToLevel("level-reasons");
@@ -927,7 +1042,10 @@ function updateCounter() {
 }
 
 function loadNextChatBubble() {
-  if (chatIndex >= CONFIG.chatMessages.length) return;
+  if (chatIndex >= CONFIG.chatMessages.length) {
+    startIfICouldFeatures();
+    return;
+  }
   
   const chatBox = document.getElementById("fake-chat-box");
   const msgObj = CONFIG.chatMessages[chatIndex];
@@ -1285,7 +1403,12 @@ function stopDrawing() {
 }
 
 function initScratchCard() {
-  // Configured in startScratchFeatures()
+  const nextBtn = document.getElementById("scratch-next-btn");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      goToLevel("level-typewriter");
+    });
+  }
 }
 
 
@@ -1378,19 +1501,64 @@ function initLastSurpriseChain() {
   
   finalLoveBtn.addEventListener("click", () => {
     playSuccessChime();
-    photo.src = CONFIG.favoritePhoto;
-    isFireworksActive = true; // Start the fireworks!
     
-    triggerBGConfettiBurst();
-    setTimeout(triggerBGConfettiBurst, 400);
-    setTimeout(triggerBGConfettiBurst, 800);
-    
-    // Continuously spawn confetti every 2.5 seconds on the final screen!
-    setInterval(triggerBGConfettiBurst, 2500);
-    
-    promptDiv.classList.add("hidden");
-    revealDiv.classList.remove("hidden");
-    revealDiv.classList.add("fade-in");
+    // Trigger fake loading console protocol first
+    startConsoleSearch(() => {
+      const countdownOverlay = document.getElementById("movie-countdown-overlay");
+      const countdownNum = document.getElementById("countdown-number");
+      const spotlightContainer = document.getElementById("spotlight-container");
+      
+      // Show theatrical film countdown
+      countdownOverlay.classList.remove("hidden");
+      
+      // Preload favorite image
+      photo.src = CONFIG.favoritePhoto;
+      
+      let count = 3;
+      countdownNum.innerText = count;
+      
+      const countInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownNum.innerText = count;
+          // Projector countdown sound effect
+          if (audioCtx) {
+            playTone(480, 0.15, "sine", 0.2);
+          }
+        } else {
+          clearInterval(countInterval);
+          
+          // Hide countdown and roll the curtain!
+          countdownOverlay.classList.add("hidden");
+          
+          if (spotlightContainer) {
+            spotlightContainer.classList.remove("hidden");
+          }
+          
+          promptDiv.classList.add("hidden");
+          revealDiv.classList.remove("hidden");
+          revealDiv.classList.add("fade-in");
+          
+          // Music integration on theatrical reveal
+          initAudioContext();
+          if (!isPlaying) {
+            startMusic();
+          } else {
+            // Play a beautiful success celebratory chime burst!
+            playSuccessChime();
+            setTimeout(playSuccessChime, 150);
+            setTimeout(playSuccessChime, 300);
+          }
+          
+          // Unleash celebratory animations
+          isFireworksActive = true;
+          triggerBGConfettiBurst();
+          setTimeout(triggerBGConfettiBurst, 400);
+          setTimeout(triggerBGConfettiBurst, 800);
+          setInterval(triggerBGConfettiBurst, 2500);
+        }
+      }, 1000);
+    });
   });
 }
 
@@ -1402,27 +1570,33 @@ function initEvasiveButtons() {
   evasiveBtns.forEach(btn => {
     const container = btn.closest(".gate-options-container") || btn.closest(".quiz-options-container");
     
-    const evadeHandler = (e) => {
-      evadeButton(btn, container);
-    };
-    
-    btn.addEventListener("mouseover", evadeHandler);
+    btn.addEventListener("mouseover", (e) => {
+      evadeButton(btn, container, e);
+    });
     btn.addEventListener("touchstart", (e) => {
       e.preventDefault();
-      evadeButton(btn, container);
+      evadeButton(btn, container, e);
     });
     btn.addEventListener("click", (e) => {
-      evadeButton(btn, container);
+      e.preventDefault();
+      evadeButton(btn, container, e);
     });
   });
 }
 
-function evadeButton(btn, container) {
+function evadeButton(btn, container, e) {
   if (!container) return;
   
-  const wrapper = btn.parentElement;
-  if (wrapper) {
-    wrapper.style.position = "static";
+  // Detach the button to place it absolutely within the relative container
+  if (btn.style.position !== "absolute") {
+    btn.style.position = "absolute";
+    btn.style.margin = "0";
+    btn.style.zIndex = "100";
+    
+    const wrapper = btn.parentElement;
+    if (wrapper) {
+      wrapper.style.position = "static";
+    }
   }
 
   const containerRect = container.getBoundingClientRect();
@@ -1431,19 +1605,378 @@ function evadeButton(btn, container) {
   const maxX = containerRect.width - btnRect.width;
   const maxY = containerRect.height - btnRect.height;
   
-  const newX = Math.random() * maxX;
-  const newY = Math.random() * (maxY - 20) + 10;
+  // Calculate relative cursor position
+  let mouseX = containerRect.width / 2;
+  let mouseY = containerRect.height / 2;
   
-  btn.style.position = "absolute";
+  if (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    if (clientX !== undefined && clientY !== undefined) {
+      mouseX = clientX - containerRect.left;
+      mouseY = clientY - containerRect.top;
+    }
+  }
+  
+  // Find a candidate spot that is far from the mouse
+  let newX = Math.random() * maxX;
+  let newY = Math.random() * (maxY - 20) + 10;
+  
+  let attempts = 0;
+  while (attempts < 25) {
+    const dist = Math.hypot(newX + btnRect.width / 2 - mouseX, newY + btnRect.height / 2 - mouseY);
+    if (dist > 130) {
+      break;
+    }
+    newX = Math.random() * maxX;
+    newY = Math.random() * (maxY - 20) + 10;
+    attempts++;
+  }
+  
   btn.style.left = `${newX}px`;
   btn.style.top = `${newY}px`;
   
   const currentScale = parseFloat(btn.style.transform.replace("scale(", "").replace(")", "")) || 1;
-  if (currentScale > 0.6) {
+  if (currentScale > 0.55) {
     btn.style.transform = `scale(${currentScale - 0.08})`;
   }
   
   if (audioCtx) {
     playTone(180, 0.08, "sine", 0.15);
   }
+}
+
+// --- [NEW] LEVEL 1.8: BABY INTRO AND STORIES ---
+function initBabyIntro() {
+  const nextBtn = document.getElementById("baby-intro-next-btn");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      goToLevel("level-greeting");
+    });
+  }
+}
+
+function startBabyIntro() {
+  const nextBtn = document.getElementById("baby-intro-next-btn");
+  const photo = document.getElementById("baby-intro-photo");
+  
+  if (photo) {
+    photo.src = CONFIG.kidPhoto;
+  }
+  
+  nextBtn.classList.add("hidden");
+  
+  const paragraphs = [
+    document.getElementById("baby-story-p1"),
+    document.getElementById("baby-story-p2"),
+    document.getElementById("baby-story-portrait"),
+    document.getElementById("baby-story-p3"),
+    document.getElementById("baby-story-p4"),
+    document.getElementById("baby-story-p5"),
+    document.getElementById("baby-story-p6")
+  ];
+  
+  paragraphs.forEach(p => {
+    if (p) {
+      p.classList.add("hidden");
+      p.classList.remove("show-block");
+    }
+  });
+  
+  let delay = 300;
+  
+  paragraphs.forEach((p, idx) => {
+    setTimeout(() => {
+      if (p) {
+        p.classList.remove("hidden");
+        p.classList.add("show-block");
+        if (audioCtx) {
+          playTone(550 + idx * 50, 0.08, "sine", 0.08);
+        }
+      }
+      
+      if (idx === paragraphs.length - 1) {
+        setTimeout(() => {
+          nextBtn.classList.remove("hidden");
+          nextBtn.classList.add("pulse-infinite");
+        }, 1500);
+      }
+    }, delay);
+    
+    // Storytelling delay offsets
+    if (idx === 1) {
+      delay += 1800;
+    } else if (idx === 2) {
+      delay += 1200;
+    } else if (idx === 4) {
+      delay += 2200;
+    } else if (idx === 5) {
+      delay += 2000;
+    } else {
+      delay += 1500;
+    }
+  });
+}
+
+// --- LEVEL 2: GREETING MORPHING AVATAR ---
+function startGreetingMorph() {
+  const photo = document.getElementById("welcome-hero-photo");
+  const morphText = document.getElementById("morphing-text");
+  const silhouette = document.getElementById("teen-silhouette");
+  const badge = document.getElementById("welcome-hero-badge");
+  
+  if (!photo || !morphText || !silhouette) return;
+  
+  photo.style.opacity = "1";
+  photo.src = CONFIG.kidPhoto;
+  silhouette.classList.add("hidden");
+  silhouette.style.opacity = "0";
+  morphText.innerText = "From this tiny smile...";
+  badge.innerText = "Baby Tushar 🍼";
+  
+  // Teen step
+  setTimeout(() => {
+    photo.style.opacity = "0";
+    silhouette.classList.remove("hidden");
+    silhouette.style.opacity = "1";
+    morphText.innerText = "growing into a teenager with big dreams...";
+    badge.innerText = "Dreaming Teen 💫";
+    if (audioCtx) playTone(440, 0.2, "sine", 0.1);
+    
+    // Adult step
+    setTimeout(() => {
+      silhouette.style.opacity = "0";
+      photo.src = CONFIG.favoritePhoto;
+      photo.style.opacity = "1";
+      morphText.innerText = "...to the handsome man who stole my heart. ❤️";
+      badge.innerText = "❤️ My Favorite Human";
+      playChime();
+      triggerBGConfettiBurst();
+      
+      setTimeout(() => {
+        silhouette.classList.add("hidden");
+      }, 600);
+    }, 2200);
+  }, 2200);
+}
+
+// --- FLOATING LYRICS OVERLAY ---
+let lyricsTimeout = null;
+function startLyricsOverlay() {
+  const container = document.getElementById("floating-lyrics-container");
+  if (!container) return;
+  
+  stopLyricsOverlay();
+  
+  const lyrics = [
+    "Happy Birthday,",
+    "my favorite person... 🎂",
+    "This little website...",
+    "is just one tiny way",
+    "of saying...",
+    "I love you. ❤️"
+  ];
+  
+  let index = 0;
+  
+  function showNextLyric() {
+    if (!isPlaying) return;
+    
+    container.innerHTML = "";
+    const text = lyrics[index];
+    
+    const line = document.createElement("div");
+    line.classList.add("lyric-line");
+    line.innerText = text;
+    container.appendChild(line);
+    
+    index = (index + 1) % lyrics.length;
+    lyricsTimeout = setTimeout(showNextLyric, 4200);
+  }
+  
+  showNextLyric();
+}
+
+function stopLyricsOverlay() {
+  if (lyricsTimeout) {
+    clearTimeout(lyricsTimeout);
+    lyricsTimeout = null;
+  }
+  const container = document.getElementById("floating-lyrics-container");
+  if (container) container.innerHTML = "";
+}
+
+// --- FAKE CONSOLE LOADING TERMINAL ---
+function startConsoleSearch(callback) {
+  const overlay = document.getElementById("fake-loading-overlay");
+  const consoleDiv = document.getElementById("loading-console");
+  
+  if (!overlay || !consoleDiv) {
+    callback();
+    return;
+  }
+  
+  overlay.classList.remove("hidden");
+  consoleDiv.innerHTML = "";
+  
+  const lines = [
+    "Initializing boyfriend search protocol...",
+    "Query: boyfriend_name == 'Tushar'",
+    "Loading criteria: cute, caring, makes me laugh...",
+    "Scanning databases...",
+    "Checking global indices...",
+    "Loading...",
+    "Loading...",
+    "Checking for compatibility score > 9000...",
+    "Loading...",
+    "❌ No better boyfriend found.",
+    "Match Found ❤️",
+    "Selected: Tushar (My Superhero)",
+    "Launching Premiere Projection System..."
+  ];
+  
+  let lineIndex = 0;
+  
+  function printNextLine() {
+    if (lineIndex < lines.length) {
+      const p = document.createElement("p");
+      p.classList.add("console-line");
+      p.innerText = lines[lineIndex];
+      
+      if (lines[lineIndex].startsWith("❌")) {
+        p.style.color = "#ff3366";
+        p.style.fontWeight = "bold";
+      } else if (lines[lineIndex].startsWith("Match Found")) {
+        p.style.color = "#ff99bb";
+        p.style.fontWeight = "bold";
+      }
+      
+      consoleDiv.appendChild(p);
+      overlay.scrollTop = overlay.scrollHeight;
+      
+      if (audioCtx) {
+        playTone(320 + lineIndex * 20, 0.04, "sine", 0.05);
+      }
+      
+      lineIndex++;
+      
+      let lineDelay = 250;
+      if (lines[lineIndex - 1].includes("Loading")) {
+        lineDelay = 400;
+      } else if (lines[lineIndex - 1].includes("Scan") || lines[lineIndex - 1].includes("Check")) {
+        lineDelay = 500;
+      } else if (lines[lineIndex - 1].startsWith("❌")) {
+        lineDelay = 1000;
+      }
+      
+      setTimeout(printNextLine, lineDelay);
+    } else {
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        callback();
+      }, 1200);
+    }
+  }
+  
+  printNextLine();
+}
+
+// --- INTERACTIVE SECRET HEART ---
+function initSecretHeart() {
+  const heartBtn = document.getElementById("secret-heart-btn");
+  const modal = document.getElementById("secret-heart-modal");
+  const closeBtn = document.getElementById("close-secret-modal");
+  
+  if (!heartBtn || !modal || !closeBtn) return;
+  
+  heartBtn.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+    playSuccessChime();
+  });
+  
+  closeBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    if (audioCtx) playChime();
+  });
+}
+
+// --- FINAL STARRY ENDING ---
+function initFinalStarryEnding() {
+  const triggerBtn = document.getElementById("trigger-final-stars-btn");
+  const endingScreen = document.getElementById("final-starry-ending");
+  const starsContainer = document.getElementById("stars-container");
+  
+  if (!triggerBtn || !endingScreen || !starsContainer) return;
+  
+  triggerBtn.addEventListener("click", () => {
+    endingScreen.classList.remove("hidden");
+    endingScreen.classList.add("fade-in");
+    
+    // Twinkling stars generator
+    starsContainer.innerHTML = "";
+    const starCount = 65;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement("div");
+      star.classList.add("star-particle");
+      
+      const size = Math.random() * 3 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      
+      const duration = Math.random() * 3 + 2;
+      const delay = Math.random() * 5;
+      star.style.animationDuration = `${duration}s`;
+      star.style.animationDelay = `${delay}s`;
+      
+      starsContainer.appendChild(star);
+    }
+    
+    triggerBGConfettiBurst();
+    setTimeout(triggerBGConfettiBurst, 500);
+  });
+}
+
+// --- IF I COULD CARDS GENERATOR ---
+function startIfICouldFeatures() {
+  const section = document.getElementById("if-i-could-section");
+  const cardsContainer = document.getElementById("if-cards-container");
+  const nextBtn = document.getElementById("timeline-next-btn");
+  
+  if (!section || !cardsContainer) return;
+  
+  section.classList.remove("hidden");
+  section.classList.add("fade-in");
+  cardsContainer.innerHTML = "";
+  nextBtn.classList.add("hidden");
+  
+  const cards = [
+    "❤️ I'd hug you.",
+    "❤️ I'd steal your hoodie.",
+    "❤️ I'd annoy you forever.",
+    "❤️ I'd celebrate every birthday with you.",
+    "❤️ I'd choose you again."
+  ];
+  
+  cards.forEach((text, idx) => {
+    setTimeout(() => {
+      const card = document.createElement("div");
+      card.classList.add("if-card");
+      card.innerText = text;
+      cardsContainer.appendChild(card);
+      
+      if (audioCtx) {
+        playTone(600 + idx * 80, 0.1, "sine", 0.08);
+      }
+      
+      if (idx === cards.length - 1) {
+        setTimeout(() => {
+          nextBtn.classList.remove("hidden");
+          nextBtn.classList.add("pulse-infinite");
+        }, 1200);
+      }
+    }, idx * 1800);
+  });
 }

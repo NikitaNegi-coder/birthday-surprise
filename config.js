@@ -12,37 +12,37 @@ const CONFIG = {
   // Level 5: Timeline Milestones (Sweet everyday moments - no dates!)
   timelineItems: [
     {
-      title: "🍕 Midnight Food Stealing",
-      desc: "Our late-night kitchen raids and fighting over who gets the last slice of pizza. You always let me win anyway! 🍕❤️"
+      title: "😴 Watching Over Me As I Sleep",
+      desc: "How you gently wipe my face if it gets sweaty while I sleep, watching over me like I'm your little kid. I feel so precious and safe in your arms. 😴💤💖"
     },
     {
-      title: "🥺 Warm Hand-Holding",
-      desc: "The way you hold my hand a little tighter whenever you notice I'm feeling nervous or cold. It's my absolute safe place. 🤝✨"
+      title: "😂 Making Me Laugh",
+      desc: "How you always know exactly how to make me laugh with your jokes, especially when you start laughing at them first. Your smile is my daily dose of happiness! 😂✨"
     },
     {
-      title: "😴 Your Peaceful Sleeping Face",
-      desc: "Staring at you sleeping like a baby while you have no idea. You look so cute and peaceful, I can't help but smile. 💤💖"
+      title: "👑 Putting Me First",
+      desc: "The way you care for me in every single thing, always making sure I am the top priority in your life. You hold me in the most special place. ❤️"
     },
     {
-      title: "💬 Our Weird Inside Jokes",
-      desc: "Laughing like crazy at things that make zero sense to anyone else. I love how we share the exact same broken sense of humor! 😂🤪"
+      title: "🍿 Late-Night Movie Sessions",
+      desc: "Cozying up to watch movies late into the night, sharing our favorite snacks and letting go of all the office stress together. 🍿🎥💖"
     },
     {
-      title: "🏔️ Warm Hugs in Cold Places",
-      desc: "Getting lost on our walks and freezing, but being completely warm because we are holding each other close. 🏔️❄️"
+      title: "🥗 Our Kitchen Teamwork",
+      desc: "Prepping and cooking our meals together, with you helping me chop vegetables and setting up the kitchen. You help me with every single meal we make, turning cooking into our sweet little dates! 🍳👩‍🍳❤️"
     },
     {
-      title: "👑 Everyday Magic",
-      desc: "Just sitting next to you doing absolutely nothing, and realizing there is nowhere else in the universe I would rather be. ❤️"
+      title: "🍱 Office Lunch Deliveries",
+      desc: "When I make lunch and you bring it all the way to my office, making sure I never miss a meal during hectic workdays. You care for me like no one else. 🍱🏢💕"
     }
   ],
 
   chatMessages: [
-    { sender: "me", text: "Hey baby..." },
-    { sender: "him", text: "Hey! What's up? Everything okay?" },
-    { sender: "me", text: "Yes, just wanted to remind you that you're officially my favorite person in the world. 🥰" },
-    { sender: "him", text: "Aww, you're making me smile at my phone again! 🥺❤️" },
-    { sender: "me", text: "Haha deal with it! Happy Birthday, my love! 🎂" }
+    { sender: "me", text: "Guess what day it is... 👀" },
+    { sender: "him", text: "Saturday? 😜" },
+    { sender: "me", text: "Yes, but more importantly, it's July 11th! 🎂❤️" },
+    { sender: "him", text: "Haha oh yeah, the big day! 🙈 Thank you baby 🥺" },
+    { sender: "me", text: "Happy Birthday my love! You're the absolute best and I love you so much! 🎉💖" }
   ],
 
   // Level 3: Polaroid Slide Photos
@@ -78,16 +78,16 @@ const CONFIG = {
 
   // [NEW] Level 8: Reasons I Love You Box
   reasonsList: [
-    "The way you hold me close, Tushar, when we watch scary movies. 🍿❤️",
-    "How your eyes light up, baby, whenever you talk about something you're excited about. ✨",
-    "The way you always support me, my puppu, believe in my dreams, and cheer me on. 👑",
-    "Your warm hugs, Tushar, that make all my worries go away instantly. 🤗",
-    "How you always know exactly how to make me laugh when I'm feeling down, baby. 😂",
-    "Your kind, gentle heart, my puppu, and the beautiful way you care for everyone around you. 🌟"
+    "The sweet way you watch over me while I sleep, gently wiping my face if it gets sweaty. 🥺💖",
+    "How you always make me laugh with your jokes, especially when you start laughing at them yourself! 😂✨",
+    "The way you care for me in every single thing, making sure I am always your top priority. ❤️",
+    "Cozying up with snacks for our late-night movie sessions after long, hectic days at the office. 🍿🎬",
+    "Our kitchen dates where you help me chop vegetables and cook every single meal together. 🥗🍳",
+    "How you bring my packed lunch to my office to make sure I eat properly on busy days. 🍱🏢"
   ],
 
   // [NEW] Level 12: Secret Scratch Card Note
-  scratchCardMessage: "You scratched off the foil! 🎁 Here is my secret whisper: You are my heart, my home, and my favorite adventure. Thank you for being my puppu. I love you! ❤️",
+  scratchCardMessage: "You scratched off the foil! 🎁 Here is my secret whisper: You are my heart, my home, and my whole world. Thank you for being my puppu. I love you! ❤️",
 
   // Level 7: Typewriter Love Letter
   loveLetter: `There are thousands of people in this world...
@@ -95,7 +95,7 @@ const CONFIG = {
 Yet somehow,
 my favorite person is you.
 
-Happy Birthday, Tushar! ❤️`,
+Happy Birthday, Puppu! ❤️`,
 
   // Level 8: Birthday Card Message
   birthdayCard: {
@@ -108,5 +108,6 @@ Happy Birthday, Tushar! ❤️`,
   },
 
   // Level 9: Final Favorite Photo Display
-  favoritePhoto: "photo_favorite.png"
+  favoritePhoto: "photo_favorite.png",
+  kidPhoto: "photo_kid.png"
 };
