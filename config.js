@@ -119,5 +119,5 @@ Happy Birthday, Puppu! ❤️`,
 
   // Level 9: Final Favorite Photo Display
   favoritePhoto: "6.jpeg",
-  kidPhoto: "photokid.png"
+  kidPhoto: "photo_kid.png"
 };
