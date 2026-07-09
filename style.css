@@ -285,11 +285,33 @@ h2 {
   perspective: 800px;
 }
 
+/* Glowing shadow aura underneath the gift box */
+.gift-box-wrapper::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 15px;
+  width: 140px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 50%;
+  filter: blur(8px);
+  z-index: 0;
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.gift-box-wrapper:hover::before {
+  transform: scale(1.1);
+  background: rgba(255, 51, 102, 0.28);
+  filter: blur(12px);
+}
+
 .gift-box {
   width: 100%;
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
+  transition: transform 0.5s ease;
 }
 
 .gift-box:hover {
@@ -302,9 +324,10 @@ h2 {
   left: 10px;
   width: 150px;
   height: 115px;
-  background: linear-gradient(135deg, var(--secondary-color) 0%, #5d1bb5 50%, #3a0ca3 100%);
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.05);
+  background: linear-gradient(135deg, var(--secondary-color) 0%, #4c11a6 50%, #2b0475 100%);
+  border-radius: 0 0 16px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.65), inset 0 0 20px rgba(255,255,255,0.06);
 }
 
 .gift-box-lid {
@@ -313,12 +336,26 @@ h2 {
   left: 0;
   width: 170px;
   height: 25px;
-  background: #9046f2;
-  border-radius: 6px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.25);
+  background: linear-gradient(135deg, #a85eff 0%, var(--secondary-color) 100%);
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.35);
   z-index: 10;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.25), opacity 0.6s ease;
   transform-origin: bottom left;
+}
+
+/* Vertical ribbon segment on the lid */
+.gift-box-lid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 76px;
+  width: 18px;
+  height: 100%;
+  background: linear-gradient(to right, #ffe596, var(--accent-color), #d8a72a);
+  z-index: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .gift-box-ribbon-horizontal {
@@ -327,9 +364,9 @@ h2 {
   left: 10px;
   width: 150px;
   height: 18px;
-  background: var(--accent-color);
+  background: linear-gradient(to bottom, #ffe596, var(--accent-color), #d8a72a);
   z-index: 2;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .gift-box-ribbon-vertical {
@@ -338,49 +375,109 @@ h2 {
   left: 76px;
   width: 18px;
   height: 115px;
-  background: var(--accent-color);
+  background: linear-gradient(to right, #ffe596, var(--accent-color), #d8a72a);
   z-index: 2;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+/* Bow center knot */
 .gift-box-bow {
   position: absolute;
-  top: 12px;
-  left: 65px;
-  width: 40px;
-  height: 30px;
+  top: 22px;
+  left: 77px;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #ffe596 0%, var(--accent-color) 50%, #d8a72a 100%);
+  border-radius: 50%;
   z-index: 11;
-  transition: transform 0.5s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.25), opacity 0.6s ease;
 }
 
-.gift-box-bow::before, .gift-box-bow::after {
+/* Left loop of the bow */
+.gift-box-bow::before {
   content: '';
   position: absolute;
-  width: 24px;
-  height: 24px;
-  border: 4px solid var(--accent-color);
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #ffe596 0%, var(--accent-color) 60%, #c4941e 100%);
   border-radius: 50% 50% 0 50%;
-  transform: rotate(-45deg);
+  top: -8px;
+  left: -18px;
+  transform: rotate(-15deg);
+  box-shadow: -2px 4px 6px rgba(0,0,0,0.25);
 }
 
+/* Right loop of the bow */
 .gift-box-bow::after {
-  left: 16px;
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #ffe596 0%, var(--accent-color) 60%, #c4941e 100%);
   border-radius: 50% 50% 50% 0;
-  transform: rotate(45deg);
+  top: -8px;
+  left: 12px;
+  transform: rotate(15deg);
+  box-shadow: 2px 4px 6px rgba(0,0,0,0.25);
+}
+
+/* Left ribbon tail drape */
+.gift-box-bow-tail-left {
+  position: absolute;
+  top: 12px;
+  left: 1px;
+  width: 6px;
+  height: 25px;
+  background: linear-gradient(to bottom, var(--accent-color), #c4941e);
+  transform: rotate(32deg);
+  transform-origin: top center;
+  border-radius: 0 0 3px 3px;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%);
+}
+
+/* Right ribbon tail drape */
+.gift-box-bow-tail-right {
+  position: absolute;
+  top: 12px;
+  left: 9px;
+  width: 6px;
+  height: 25px;
+  background: linear-gradient(to bottom, var(--accent-color), #c4941e);
+  transform: rotate(-32deg);
+  transform-origin: top center;
+  border-radius: 0 0 3px 3px;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%);
 }
 
 .gift-box.open .gift-box-lid {
-  transform: translate(-50px, -80px) rotate(-45deg);
+  transform: translate(-65px, -110px) rotate(-55deg) scale(0.85);
   opacity: 0;
 }
 
 .gift-box.open .gift-box-bow {
-  transform: translate(-50px, -80px) rotate(-45deg);
+  transform: translate(65px, -130px) rotate(45deg) scale(0.6);
   opacity: 0;
 }
 
 .gift-box.open {
   animation: explode-out 0.6s forwards;
+}
+
+/* --- ANIMATION KEYFRAMES --- */
+@keyframes shake {
+  0% { transform: rotate(0deg) scale(1); }
+  20% { transform: rotate(-3deg) scale(1.03); }
+  40% { transform: rotate(3deg) scale(1.03); }
+  60% { transform: rotate(-2deg) scale(1.03); }
+  80% { transform: rotate(2deg) scale(1.03); }
+  100% { transform: rotate(0deg) scale(1.03); }
+}
+
+@keyframes explode-out {
+  0% { transform: scale(1); opacity: 1; filter: brightness(1); }
+  50% { transform: scale(1.1); opacity: 0.85; filter: brightness(1.4); }
+  100% { transform: scale(1.35); opacity: 0; filter: brightness(2); }
 }
 
 /* --- [NEW] LEVEL 1.5: HEART LOCK SLIDER --- */
@@ -2120,4 +2217,169 @@ h2 {
 @keyframes fade-in-ending {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* --- INTERACTIVE BIRTHDAY CAKE --- */
+.cake-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 30px auto 20px;
+  width: 160px;
+  height: 140px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.cake {
+  position: relative;
+  width: 110px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cake-layer {
+  position: relative;
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.25), 0 6px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cake-layer-bottom {
+  width: 110px;
+  height: 38px;
+  background: linear-gradient(to right, #ff5c8a, var(--primary-color), #b8173d);
+  z-index: 1;
+}
+
+/* Cream drip on bottom layer */
+.cake-layer-bottom::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 0 #ffffff,
+              15px 5px 0 #ffffff,
+              30px 4px 0 #ffffff,
+              50px 7px 0 #ffffff,
+              70px 4px 0 #ffffff,
+              85px 6px 0 #ffffff,
+              98px 4px 0 #ffffff;
+}
+
+.cake-layer-top {
+  width: 80px;
+  height: 30px;
+  background: linear-gradient(to right, #ffa3b1, #ff5c8a, #d6244f);
+  z-index: 2;
+  margin-bottom: -1px;
+}
+
+/* Cream drip on top layer */
+.cake-layer-top::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  background: #ffffff;
+  border-radius: 7px 7px 0 0;
+  box-shadow: 0 3px 0 #ffffff,
+              10px 4px 0 #ffffff,
+              22px 3px 0 #ffffff,
+              35px 5px 0 #ffffff,
+              48px 3px 0 #ffffff,
+              60px 4px 0 #ffffff,
+              70px 3px 0 #ffffff;
+}
+
+/* Candle */
+.candle {
+  position: absolute;
+  bottom: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 26px;
+  background: linear-gradient(to right, #00f0ff, #0077ff);
+  border-radius: 4px 4px 0 0;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Candle stripes */
+.candle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, transparent, transparent 3px, #ffffff 3px, #ffffff 6px);
+  opacity: 0.65;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Flame */
+.flame {
+  position: absolute;
+  top: -16px;
+  left: -4.5px;
+  width: 16px;
+  height: 18px;
+  background: radial-gradient(circle at center, #ffffff 10%, #ffedb3 30%, var(--accent-color) 55%, #ff5500 85%, transparent 100%);
+  border-radius: 50% 50% 25% 25%;
+  transform-origin: bottom center;
+  animation: flicker 0.9s infinite alternate ease-in-out;
+  filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.95));
+  z-index: 4;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.flame.blown-out {
+  opacity: 0;
+  transform: scale(0);
+}
+
+/* Floating smoke ring particles */
+.cake-smoke {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+  animation: smoke-float 1.2s ease-out forwards;
+}
+
+.cake-instruction {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--accent-color);
+  animation: pulse-glow 1.8s infinite alternate;
+}
+
+@keyframes flicker {
+  0% { transform: scale(1) rotate(-1.5deg); }
+  20% { transform: scale(0.92) rotate(1.5deg); }
+  40% { transform: scale(1.08) rotate(-0.5deg); }
+  60% { transform: scale(0.96) rotate(0.5deg); }
+  80% { transform: scale(1.04) rotate(-1deg); }
+  100% { transform: scale(1) rotate(1deg); }
+}
+
+@keyframes smoke-float {
+  0% { transform: translateY(0) scale(1); opacity: 0.85; }
+  100% { transform: translateY(-35px) scale(4); opacity: 0; filter: blur(1.5px); }
 }

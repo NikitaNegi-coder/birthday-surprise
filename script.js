@@ -1468,6 +1468,54 @@ function initCard() {
   nextBtn.addEventListener("click", () => {
     goToLevel("level-last");
   });
+
+  // Interactive cake candle logic
+  const cake = document.getElementById("bday-cake");
+  const flame = document.getElementById("candle-flame");
+  
+  if (cake && flame) {
+    cake.addEventListener("click", () => {
+      if (flame.classList.contains("blown-out")) {
+        // Relight
+        flame.classList.remove("blown-out");
+        playChime();
+      } else {
+        // Blow out
+        flame.classList.add("blown-out");
+        
+        // Whoosh sound effect
+        if (audioCtx) {
+          playTone(200, 0.05, "sine", 0.08);
+          setTimeout(() => playTone(120, 0.2, "sawtooth", 0.02), 40);
+        }
+        
+        // Smoke rings effect
+        spawnSmoke();
+        
+        // Confetti burst
+        triggerBGConfettiBurst();
+      }
+    });
+  }
+}
+
+function spawnSmoke() {
+  const cake = document.getElementById("bday-cake");
+  if (!cake) return;
+  
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      const smoke = document.createElement("div");
+      smoke.classList.add("cake-smoke");
+      smoke.style.left = "52px";
+      smoke.style.top = "-12px";
+      cake.appendChild(smoke);
+      
+      setTimeout(() => {
+        smoke.remove();
+      }, 1200);
+    }, i * 150);
+  }
 }
 
 

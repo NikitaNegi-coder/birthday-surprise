@@ -33,7 +33,10 @@
             <div class="gift-box-lid"></div>
             <div class="gift-box-ribbon-horizontal"></div>
             <div class="gift-box-ribbon-vertical"></div>
-            <div class="gift-box-bow"></div>
+            <div class="gift-box-bow">
+              <div class="gift-box-bow-tail-left"></div>
+              <div class="gift-box-bow-tail-right"></div>
+            </div>
             <div class="gift-box-body"></div>
           </div>
         </div>
@@ -337,6 +340,19 @@
         
         <div class="bday-card-unfold">
           <h1 class="glow-text text-3d color-pink margin-b-md">🎉 HAPPY BIRTHDAY TUSHAR 🎉</h1>
+          
+          <!-- Interactive CSS Birthday Cake -->
+          <div class="cake-container">
+            <div class="cake" id="bday-cake">
+              <div class="candle" id="cake-candle">
+                <div class="flame" id="candle-flame"></div>
+              </div>
+              <div class="cake-layer cake-layer-top"></div>
+              <div class="cake-layer cake-layer-bottom"></div>
+            </div>
+            <p class="cake-instruction helper-text margin-t-sm">Tap the candle to blow it out! 🕯️✨</p>
+          </div>
+          
           <div class="bday-card-body text-center" id="bday-card-text">
             <!-- Filled dynamically -->
           </div>
