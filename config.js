@@ -1,6 +1,5 @@
 // CONFIGURATION FILE FOR YOUR BIRTHDAY SURPRISE WEBSITE
 // Edit the values below to customize the games, timeline, quiz, and messages!
-
 const CONFIG = {
   // Boyfriend's Name
   boyfriendName: "Tushar",
