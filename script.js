@@ -668,6 +668,7 @@ function initLockSlider() {
 function initGreeting() {
   const photo = document.getElementById("welcome-hero-photo");
   if (photo) {
+    photo.style.objectPosition = "center 15%";
     photo.src = CONFIG.favoritePhoto;
   }
   const nextBtn = document.getElementById("greeting-next-btn");
@@ -1709,6 +1710,7 @@ function startBabyIntro() {
   const photo = document.getElementById("baby-intro-photo");
   
   if (photo) {
+    photo.style.objectPosition = "center 10%";
     photo.src = CONFIG.kidPhoto;
   }
   
@@ -1776,6 +1778,7 @@ function startGreetingMorph() {
   if (!photo || !morphText || !silhouette) return;
   
   photo.style.opacity = "1";
+  photo.style.objectPosition = "center 10%";
   photo.src = CONFIG.kidPhoto;
   silhouette.classList.add("hidden");
   silhouette.style.opacity = "0";
@@ -1794,6 +1797,7 @@ function startGreetingMorph() {
     // Adult step
     setTimeout(() => {
       silhouette.style.opacity = "0";
+      photo.style.objectPosition = "center 15%";
       photo.src = CONFIG.favoritePhoto;
       photo.style.opacity = "1";
       morphText.innerText = "...to the handsome man who stole my heart. ❤️";
@@ -2001,11 +2005,11 @@ function startIfICouldFeatures() {
   nextBtn.classList.add("hidden");
   
   const cards = [
-    "❤️ I'd hug you.",
-    "❤️ I'd steal your hoodie.",
+    "❤️ I'd hug you tight.",
+    "❤️ I'd hold your hand.",
     "❤️ I'd annoy you forever.",
     "❤️ I'd celebrate every birthday with you.",
-    "❤️ I'd choose you again."
+    "❤️ I'd choose you, always."
   ];
   
   cards.forEach((text, idx) => {

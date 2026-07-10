@@ -1,5 +1,6 @@
 // CONFIGURATION FILE FOR YOUR BIRTHDAY SURPRISE WEBSITE
 // Edit the values below to customize the games, timeline, quiz, and messages!
+
 const CONFIG = {
   // Boyfriend's Name
   boyfriendName: "Tushar",
@@ -49,39 +50,34 @@ const CONFIG = {
   // ANY photo you decide to upload (selfies, travel pictures, candid shots, etc.)!
   slides: [
     {
-      image: "1.jpeg",
+      image: "couple_cozy.jpeg",
       title: "❤️ My Favorite View",
       desc: "No matter where we go or what we do, looking at you is my favorite thing in the world."
     },
     {
-      image: "2.jpeg",
+      image: "couple_smiling.jpeg",
       title: "✨ Pure Happiness",
       desc: "This memory makes me smile every single time I look at it. You make everything better."
     },
     {
-      image: "3.jpeg",
+      image: "couple_winter.jpeg",
       title: "⏳ Forever Moments",
       desc: "I wish I could freeze time in moments like this, just to stay next to you longer."
     },
     {
-      image: "4.jpeg",
+      image: "tushar_pool.jpeg",
       title: "🧸 My Happy Place",
       desc: "Just looking at your face in this picture makes my entire day so much brighter."
     },
     {
-      image: "5.jpeg",
+      image: "couple_kiss.jpeg",
       title: "💫 To the Moon & Back",
       desc: "Every single memory I make with you is my absolute favorite. I love you so much."
     },
     {
-      image: "6.jpeg",
+      image: "couple_temple.jpeg",
       title: "🌟 Sweetest Moments",
       desc: "Every second spent by your side is a treasure that I hold close to my heart. ❤️"
-    },
-    {
-      image: "7.jpeg",
-      title: "💍 Together Forever",
-      desc: "Through all of life's adventures, you are my partner, my strength, and my love. ❤️"
     }
   ],
 
@@ -117,6 +113,6 @@ Happy Birthday, Puppu! ❤️`,
   },
 
   // Level 9: Final Favorite Photo Display
-  favoritePhoto: "7.jpeg",
-  kidPhoto: "photo_kid.png"
+  favoritePhoto: "tushar_temple.jpeg",
+  kidPhoto: "tushar_kid.png"
 };
