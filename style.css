@@ -1357,18 +1357,45 @@ h2 {
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 480px) {
-  .glass-card { padding: 35px 20px; }
-  h1 { font-size: 1.85rem; }
-  h2 { font-size: 1.55rem; }
-  .text-xxl { font-size: 2.3rem; }
-  .vinyl-record-large { width: 140px; height: 140px; }
-  .countdown-display { flex-wrap: wrap; gap: 10px; }
+  .glass-card { padding: 25px 16px; }
+  h1 { font-size: 1.65rem; }
+  h2 { font-size: 1.4rem; }
+  .text-xxl { font-size: 2.1rem; }
+  .vinyl-record-large { width: 130px; height: 130px; }
+  .countdown-display { flex-wrap: wrap; gap: 8px; }
   .time-segment { min-width: 45%; }
-  .game-container { height: 260px; }
-  .heart-frame { width: 145px; height: 145px; }
-  .heart-frame::before, .heart-frame::after { width: 145px; height: 145px; }
-  .heart-frame::before { top: -72.5px; }
-  .heart-frame::after { left: 72.5px; }
+  .game-container { height: 250px; }
+  .heart-frame { width: 130px; height: 130px; }
+  .heart-frame::before, .heart-frame::after { width: 130px; height: 130px; }
+  .heart-frame::before { top: -65px; }
+  .heart-frame::after { left: 65px; }
+  
+  /* Larger circular avatars in mobile */
+  .avatar-ring, .baby-avatar-ring {
+    width: 155px;
+    height: 155px;
+  }
+  
+  /* Larger cards on mobile but responsive deck heights */
+  .card-deck-wrapper {
+    height: 355px;
+    margin: 15px auto 5px;
+  }
+  .card-deck {
+    width: 220px;
+    height: 325px;
+  }
+  .polaroid-card img {
+    height: 235px;
+  }
+  
+  /* Vertical margin compressions to avoid pushing content below */
+  .margin-tb-md { margin-top: 8px; margin-bottom: 8px; }
+  .margin-tb-lg { margin-top: 12px; margin-bottom: 12px; }
+  .margin-tb-xl { margin-top: 20px; margin-bottom: 20px; }
+  .margin-t-xl { margin-top: 20px; }
+  .welcome-hero-wrapper { margin: 12px 0 8px; }
+  .baby-portrait-wrapper { margin: 8px auto; }
 }
 
 @keyframes pop-bubble {
@@ -1438,6 +1465,7 @@ h2 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   display: block;
 }
 
@@ -1653,7 +1681,7 @@ h2 {
 /* --- LEVEL 3: PHOTO GALLERY STACKED CARD DECK --- */
 .card-deck-wrapper {
   width: 100%;
-  height: 310px;
+  height: 410px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1662,8 +1690,8 @@ h2 {
 }
 
 .card-deck {
-  width: 220px;
-  height: 280px;
+  width: 250px;
+  height: 375px;
   position: relative;
   perspective: 1000px;
 }
@@ -1695,9 +1723,10 @@ h2 {
 
 .polaroid-card img {
   width: 100%;
-  height: 190px;
-  object-fit: cover;
-  object-position: center 20%; /* Keep heads and faces in frame for portrait photos */
+  height: 285px;
+  object-fit: contain;
+  background: #fdfdfd;
+  object-position: center top;
   border: 1px solid #ddd;
   border-radius: 2px;
   display: block;
@@ -1895,25 +1924,55 @@ h2 {
 }
 
 .avatar-ring {
-  width: 125px;
-  height: 125px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  padding: 3px;
+  padding: 4px;
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   box-shadow: 0 8px 24px rgba(255, 51, 102, 0.35);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.avatar-img-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(255,255,255,0.05);
+}
+
+.avatar-img-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  filter: blur(8px) brightness(0.65);
+  transform: scale(1.2);
+  z-index: 0;
 }
 
 #welcome-hero-photo {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center 10%; /* Center the baby photo head correctly */
-  border: 2px solid #fff;
-  background-color: rgba(255,255,255,0.05);
+  object-fit: contain;
+  background-color: transparent;
+  transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-crown {
@@ -1959,22 +2018,26 @@ h2 {
 }
 
 .baby-avatar-ring {
-  width: 125px;
-  height: 125px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  padding: 3px;
+  padding: 4px;
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   box-shadow: 0 8px 24px rgba(255, 51, 102, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 #baby-intro-photo {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center 10%; /* Center the baby photo head correctly */
-  border: 2px solid #fff;
-  background: rgba(255,255,255,0.05);
+  object-fit: contain;
+  background-color: transparent;
+  transition: opacity 0.6s ease-in-out;
+  position: relative;
+  z-index: 1;
 }
 
 .baby-story-text {

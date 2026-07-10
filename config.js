@@ -109,5 +109,6 @@ Happy Birthday, Puppu! ❤️`,
 
   // Level 9: Final Favorite Photo Display
   favoritePhoto: "tushar_temple.jpg",
-  kidPhoto: "tushar_kid.jpg"
+  kidPhoto: "tushar_kid.jpg",
+  poolPhoto: "tushar_pool.jpg"
 };

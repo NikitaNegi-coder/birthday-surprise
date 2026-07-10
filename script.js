@@ -665,11 +665,22 @@ function initLockSlider() {
 
 
 // --- LEVEL 2: GREETING ---
+function updateAvatarPhoto(photo, src) {
+  if (!photo) return;
+  photo.src = src;
+  const wrapper = photo.closest(".avatar-img-wrapper");
+  if (wrapper) {
+    wrapper.style.backgroundImage = `url('${src}')`;
+  }
+}
+
+// --- LEVEL 2: GREETING ---
 function initGreeting() {
   const photo = document.getElementById("welcome-hero-photo");
   if (photo) {
-    photo.style.objectPosition = "center 15%";
-    photo.src = CONFIG.favoritePhoto;
+    photo.style.transform = "scale(1.05)";
+    photo.style.transformOrigin = "center top";
+    updateAvatarPhoto(photo, CONFIG.poolPhoto);
   }
   const nextBtn = document.getElementById("greeting-next-btn");
   nextBtn.addEventListener("click", () => {
@@ -1710,8 +1721,9 @@ function startBabyIntro() {
   const photo = document.getElementById("baby-intro-photo");
   
   if (photo) {
-    photo.style.objectPosition = "center 10%";
-    photo.src = CONFIG.kidPhoto;
+    photo.style.transform = "scale(1.05)";
+    photo.style.transformOrigin = "center top";
+    updateAvatarPhoto(photo, CONFIG.kidPhoto);
   }
   
   nextBtn.classList.add("hidden");
@@ -1775,41 +1787,35 @@ function startGreetingMorph() {
   const silhouette = document.getElementById("teen-silhouette");
   const badge = document.getElementById("welcome-hero-badge");
   
-  if (!photo || !morphText || !silhouette) return;
+  if (!photo || !morphText) return;
+  if (silhouette) {
+    silhouette.classList.add("hidden");
+    silhouette.style.opacity = "0";
+  }
   
+  // Step 1: Baby Photo
   photo.style.opacity = "1";
-  photo.style.objectPosition = "center 10%";
-  photo.src = CONFIG.kidPhoto;
-  silhouette.classList.add("hidden");
-  silhouette.style.opacity = "0";
+  photo.style.transform = "scale(1.05)";
+  photo.style.transformOrigin = "center top";
+  updateAvatarPhoto(photo, CONFIG.kidPhoto);
   morphText.innerText = "From this tiny smile...";
   badge.innerText = "Baby Tushar 🍼";
   
-  // Teen step
+  // Step 2: Pool Photo / Body Flaunt (after 2.5 seconds)
   setTimeout(() => {
     photo.style.opacity = "0";
-    silhouette.classList.remove("hidden");
-    silhouette.style.opacity = "1";
-    morphText.innerText = "growing into a teenager with big dreams...";
-    badge.innerText = "Dreaming Teen 💫";
-    if (audioCtx) playTone(440, 0.2, "sine", 0.1);
     
-    // Adult step
     setTimeout(() => {
-      silhouette.style.opacity = "0";
-      photo.style.objectPosition = "center 15%";
-      photo.src = CONFIG.favoritePhoto;
+      photo.style.transform = "scale(1.05)";
+      photo.style.transformOrigin = "center top";
+      updateAvatarPhoto(photo, CONFIG.poolPhoto);
       photo.style.opacity = "1";
       morphText.innerText = "...to the handsome man who stole my heart. ❤️";
       badge.innerText = "❤️ My Favorite Human";
       playChime();
       triggerBGConfettiBurst();
-      
-      setTimeout(() => {
-        silhouette.classList.add("hidden");
-      }, 600);
-    }, 2200);
-  }, 2200);
+    }, 400);
+  }, 2500);
 }
 
 // --- FLOATING LYRICS OVERLAY ---
