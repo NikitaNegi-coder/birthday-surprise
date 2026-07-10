@@ -676,7 +676,7 @@ function initGreeting() {
   if (photo) {
     photo.style.transform = "scale(1.05)";
     photo.style.transformOrigin = "center top";
-    updateAvatarPhoto(photo, CONFIG.poolPhoto, "center 40%");
+    updateAvatarPhoto(photo, CONFIG.poolPhoto, "center 58%");
   }
   const nextBtn = document.getElementById("greeting-next-btn");
   nextBtn.addEventListener("click", () => {
@@ -1719,7 +1719,7 @@ function startBabyIntro() {
   if (photo) {
     photo.style.transform = "scale(1.05)";
     photo.style.transformOrigin = "center top";
-    updateAvatarPhoto(photo, CONFIG.kidPhoto, "center 12%");
+    updateAvatarPhoto(photo, CONFIG.kidPhoto, "center 25%");
   }
   
   nextBtn.classList.add("hidden");
@@ -1793,7 +1793,7 @@ function startGreetingMorph() {
   photo.style.opacity = "1";
   photo.style.transform = "scale(1.05)";
   photo.style.transformOrigin = "center top";
-  updateAvatarPhoto(photo, CONFIG.kidPhoto, "center 12%");
+  updateAvatarPhoto(photo, CONFIG.kidPhoto, "center 25%");
   morphText.innerText = "From this tiny smile...";
   badge.innerText = "Baby Tushar 🍼";
   
@@ -1804,7 +1804,7 @@ function startGreetingMorph() {
     setTimeout(() => {
       photo.style.transform = "scale(1.05)";
       photo.style.transformOrigin = "center top";
-      updateAvatarPhoto(photo, CONFIG.poolPhoto, "center 40%");
+      updateAvatarPhoto(photo, CONFIG.poolPhoto, "center 58%");
       photo.style.opacity = "1";
       morphText.innerText = "...to the handsome man who stole my heart. ❤️";
       badge.innerText = "❤️ My Whole World";
