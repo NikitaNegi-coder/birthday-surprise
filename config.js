@@ -110,5 +110,39 @@ Happy Birthday, Puppu! ❤️`,
   // Level 9: Final Favorite Photo Display
   favoritePhoto: "tushar_temple.jpg",
   kidPhoto: "tushar_kid.jpg",
-  poolPhoto: "tushar_pool.jpg"
+  poolPhoto: "tushar_pool.jpg",
+
+  // --- NEW UPGRADED CONFIGURATIONS ---
+  // Floating Secret Heart Messages (Tapped in bottom-left corner)
+  secretHeartMessages: [
+    "Hehe... I knew you'd tap random things. I love you, idiot! ❤️",
+    "Checking if you're smiling right now... Yep, you are! Cutie. 🤭",
+    "Quick reminder: You owe me 100 kisses today. No interest rate, but compounding daily! 😘",
+    "Psst... You're the best thing that ever happened to me. Now go back to the surprise! 🥰",
+    "Secret Code: PUPPU-FOREVER. Use this to get an extra warm hug! 🧸"
+  ],
+
+  // Cursive Love Letter content (vintage wax-sealed letter)
+  loveLetterText: `My Baby,
+
+Happy 26th Birthday, my jaan! ❤️
+
+Today is all about celebrating the most wonderful human being in my life. From the sweet ways you look after me to the infinite times you make me laugh, every single day with you is a blessing. 
+
+I pray that God showers you with endless happiness, good health, and success. I wish for us to spend our entire lives together, growing old hand-in-hand, building a beautiful home, having kids, and sharing every single joy of life until we are old and wrinkly. 🥺🏡👶❤️
+
+Thank you for being my safe space, my biggest supporter, and my absolute favorite person. I love you to the moon and back, forever and always. 
+
+Always yours,
+Nikki (Your Puppu's forever) 💖
+(Destiny did its beautiful part by bringing us together, but choosing to love you is the happiest decision my heart makes every single day. ❤️)`,
+
+  // Virtual Love Coupons Tushar can redeem
+  loveCoupons: [
+    { id: "massage", icon: "💆‍♂️", title: "Relieving Head Massage", desc: "Valid after an exhausting, hectic workday." },
+    { id: "dinner", icon: "🍲", title: "Chef-Special Dinner", desc: "A delicious meal cooked with extra love by Nikki." },
+    { id: "fight", icon: "🏳️", title: "Instant Fight-Winner Pass", desc: "Instantly ends any small argument, no questions asked!" },
+    { id: "cuddles", icon: "🧸", title: "Endless Hugs & Cuddles", desc: "One hour minimum of warm cozy hugs on demand." },
+    { id: "movie", icon: "🎬", title: "Remote Control Hijack", desc: "You pick any movie, and I promise not to complain!" }
+  ]
 };

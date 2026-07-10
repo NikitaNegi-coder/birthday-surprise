@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initEvasiveButtons();
   initSecretHeart();
   initFinalStarryEnding();
+  initUpgradedEndingFeatures();
 });
 
 // --- AUDIO SYNTHESIZER (MUSIC BOX TUNE) ---
@@ -1946,6 +1947,28 @@ function initSecretHeart() {
   heartBtn.addEventListener("click", () => {
     modal.classList.remove("hidden");
     playSuccessChime();
+    
+    // Choose a random message from the configurations
+    const messages = CONFIG.secretHeartMessages || ["I love you! ❤️"];
+    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+    
+    // Update the paragraph text
+    const textElem = modal.querySelector(".modal-content p.text-lg");
+    if (textElem) {
+      textElem.innerText = randomMsg;
+    }
+    
+    // Hide static elements not needed for dynamic text
+    const h2Elem = modal.querySelector(".modal-content h2.handwritten");
+    if (h2Elem) {
+      h2Elem.style.display = "none";
+    }
+    
+    // Make the title sound mysterious/funny
+    const h3Elem = modal.querySelector(".modal-content h3");
+    if (h3Elem) {
+      h3Elem.innerText = "Secret Whisper... 🤫❤️";
+    }
   });
   
   closeBtn.addEventListener("click", () => {
@@ -2032,5 +2055,131 @@ function startIfICouldFeatures() {
         }, 1200);
       }
     }, idx * 1800);
+  });
+}
+
+// --- UPGRADED ENDING FEATURES: LETTER & COUPONS ---
+function initUpgradedEndingFeatures() {
+  // Love Letter variables
+  const openLetterBtn = document.getElementById("open-letter-btn");
+  const letterModal = document.getElementById("love-letter-modal");
+  const closeLetterBtn = document.getElementById("close-letter-modal");
+  const envelope = document.getElementById("envelope-element");
+  const sealBtn = document.getElementById("envelope-seal-btn");
+  const letterPaper = document.getElementById("letter-paper");
+  const letterTextContent = document.getElementById("letter-text-content");
+  const envelopeWrapper = document.getElementById("envelope-wrapper");
+  
+  if (openLetterBtn && letterModal && closeLetterBtn) {
+    openLetterBtn.addEventListener("click", () => {
+      letterModal.classList.remove("hidden");
+      // Reset state of envelope when modal opens
+      if (envelope) envelope.classList.remove("open");
+      if (letterPaper) letterPaper.classList.add("hidden");
+      if (envelopeWrapper) envelopeWrapper.classList.remove("hidden");
+      playChime();
+    });
+    
+    closeLetterBtn.addEventListener("click", () => {
+      letterModal.classList.add("hidden");
+      if (audioCtx) playChime();
+    });
+    
+    // Wax seal clicking
+    if (envelope && sealBtn && letterPaper && envelopeWrapper) {
+      const openAction = () => {
+        envelope.classList.add("open");
+        playSuccessChime();
+        triggerBGConfettiBurst();
+        
+        setTimeout(() => {
+          envelopeWrapper.classList.add("hidden");
+          letterPaper.classList.remove("hidden");
+          if (letterTextContent) {
+            letterTextContent.innerText = CONFIG.loveLetterText || "I love you! ❤️";
+          }
+        }, 1000);
+      };
+      
+      sealBtn.addEventListener("click", openAction);
+      envelope.addEventListener("click", (e) => {
+        if (!envelope.classList.contains("open") && e.target !== sealBtn) {
+          openAction();
+        }
+      });
+    }
+  }
+  
+  // Love Coupons variables
+  const openCouponsBtn = document.getElementById("open-coupons-btn");
+  const couponsModal = document.getElementById("love-coupons-modal");
+  const closeCouponsBtn = document.getElementById("close-coupons-modal");
+  const couponsGrid = document.getElementById("coupons-grid");
+  
+  if (openCouponsBtn && couponsModal && closeCouponsBtn && couponsGrid) {
+    openCouponsBtn.addEventListener("click", () => {
+      couponsModal.classList.remove("hidden");
+      playChime();
+      renderCouponsList();
+    });
+    
+    closeCouponsBtn.addEventListener("click", () => {
+      couponsModal.classList.add("hidden");
+      if (audioCtx) playChime();
+    });
+  }
+}
+
+function renderCouponsList() {
+  const couponsGrid = document.getElementById("coupons-grid");
+  if (!couponsGrid) return;
+  couponsGrid.innerHTML = "";
+  
+  const couponStates = JSON.parse(localStorage.getItem("love_coupons_redeemed") || "{}");
+  const coupons = CONFIG.loveCoupons || [];
+  
+  coupons.forEach(coupon => {
+    const couponCard = document.createElement("div");
+    couponCard.classList.add("love-coupon");
+    const isRedeemed = couponStates[coupon.id] === true;
+    if (isRedeemed) {
+      couponCard.classList.add("redeemed");
+    }
+    
+    couponCard.innerHTML = `
+      <div class="coupon-info">
+        <div class="coupon-icon">${coupon.icon}</div>
+        <div class="coupon-details">
+          <h4>${coupon.title}</h4>
+          <p>${coupon.desc}</p>
+        </div>
+      </div>
+      <div class="coupon-action">
+        ${isRedeemed 
+          ? `<div class="coupon-redeemed-text">REDEEMED!</div>`
+          : `<button class="coupon-btn" data-id="${coupon.id}">Redeem</button>`
+        }
+      </div>
+    `;
+    
+    couponsGrid.appendChild(couponCard);
+  });
+  
+  // Event listeners for redeem buttons
+  couponsGrid.querySelectorAll(".coupon-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const id = btn.getAttribute("data-id");
+      couponStates[id] = true;
+      localStorage.setItem("love_coupons_redeemed", JSON.stringify(couponStates));
+      
+      playSuccessChime();
+      
+      // Trigger confetti at coordinates
+      const btnRect = btn.getBoundingClientRect();
+      spawnHeartsBurst(btnRect.left + btnRect.width / 2, btnRect.top + btnRect.height / 2);
+      
+      // Rerender coupons list
+      renderCouponsList();
+    });
   });
 }

@@ -1485,7 +1485,7 @@ h2 {
 }
 
 .poster-studio {
-  font-size: 0.55rem;
+  font-size: 0.48rem;
   letter-spacing: 1.5px;
   color: var(--primary-color);
   font-weight: 800;
@@ -1495,7 +1495,7 @@ h2 {
 }
 
 .poster-subtext {
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   color: var(--text-muted);
   margin-bottom: 2px;
   text-transform: uppercase;
@@ -1503,7 +1503,7 @@ h2 {
 }
 
 .poster-title {
-  font-size: 1.65rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: 1px;
@@ -1514,7 +1514,7 @@ h2 {
 }
 
 .poster-starring {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 1px;
   margin-bottom: 8px;
@@ -2436,4 +2436,229 @@ h2 {
 @keyframes smoke-float {
   0% { transform: translateY(0) scale(1); opacity: 0.85; }
   100% { transform: translateY(-35px) scale(4); opacity: 0; filter: blur(1.5px); }
+}
+
+/* --- NEW UPGRADE STYLES --- */
+
+/* Landing present developer attribution footer */
+.app-credits {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  text-align: center;
+}
+.app-credits p {
+  margin: 2px 0;
+}
+.copyright-sub {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+
+/* Wax Sealed Envelope */
+.envelope-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 20px auto;
+}
+.envelope {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  background: #fdf5e6;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.4s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.envelope:hover {
+  transform: translateY(-5px) scale(1.03);
+}
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 100px solid transparent;
+  border-right: 100px solid transparent;
+  border-top: 60px solid #ecd5b0;
+  transform-origin: top center;
+  transition: transform 0.4s ease;
+  z-index: 3;
+}
+.envelope.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+.envelope-paper {
+  position: absolute;
+  width: 180px;
+  height: 100px;
+  background: #fff;
+  top: 10px;
+  z-index: 2;
+  transition: transform 0.6s ease;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.envelope.open .envelope-paper {
+  transform: translateY(-50px);
+}
+.envelope-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 100px solid #f6e0bf;
+  border-right: 100px solid #f6e0bf;
+  border-bottom: 60px solid #f6e0bf;
+  z-index: 3;
+  border-radius: 0 0 4px 4px;
+}
+.envelope-seal {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  background: #c92a2a;
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 42px;
+  left: 82px;
+  z-index: 4;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.envelope-seal:hover {
+  transform: scale(1.15) rotate(15deg);
+}
+.envelope.open .envelope-seal {
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+/* Cursive Letter Paper */
+.letter-paper {
+  background: #faf4e8;
+  border-radius: 8px;
+  padding: 25px 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 40px rgba(139,69,19,0.05);
+  border: 1px solid #d4c5b3;
+  animation: paper-unfold 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  width: 100%;
+  color: #4a382c;
+}
+@keyframes paper-unfold {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+/* Love Coupons Grid */
+.coupons-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+.love-coupon {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1.5px dashed rgba(255, 209, 102, 0.4);
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  text-align: left;
+  overflow: hidden;
+}
+.love-coupon::before, .love-coupon::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #09090d; /* Fakes ticket notches blending into dark modal overlay background */
+  border-radius: 50%;
+  top: calc(50% - 8px);
+}
+.love-coupon::before { left: -9px; border-right: 1.5px dashed rgba(255, 209, 102, 0.4); }
+.love-coupon::after { right: -9px; border-left: 1.5px dashed rgba(255, 209, 102, 0.4); }
+
+.coupon-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.coupon-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.coupon-details h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+}
+.coupon-details p {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+.coupon-action {
+  z-index: 5;
+}
+.coupon-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(255, 51, 102, 0.3);
+  transition: all 0.3s ease;
+}
+.coupon-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 5px 12px rgba(255, 51, 102, 0.5);
+}
+.love-coupon.redeemed {
+  border-color: rgba(255, 51, 102, 0.3);
+  background: rgba(255, 51, 102, 0.04);
+  opacity: 0.75;
+}
+.love-coupon.redeemed::before, .love-coupon.redeemed::after {
+  background: #09090d;
+}
+.coupon-redeemed-text {
+  font-family: var(--font-handwritten);
+  color: var(--primary-color);
+  font-size: 1.15rem;
+  font-weight: 800;
+  transform: rotate(-10deg);
+  border: 2px solid var(--primary-color);
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-shadow: 0 0 5px rgba(255,51,102,0.2);
+  letter-spacing: 1px;
 }

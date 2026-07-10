@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,18 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap"
+    rel="stylesheet">
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css?v=6.0">
 </head>
+
 <body>
 
   <!-- Background Effect Canvas (Confetti, Fireworks, Floating Hearts) -->
   <canvas id="canvas-bg"></canvas>
-  
+
   <!-- Mouse Pointer Hearts Container -->
   <div id="hearts-pointer-container"></div>
 
@@ -27,7 +31,7 @@
         <div class="badge">A Special Message</div>
         <h1 class="glow-text margin-b-lg">🎁 You have 1 birthday surprise!</h1>
         <p class="helper-text margin-b-xl">Tap the glowing present to unbox your surprise...</p>
-        
+
         <div class="gift-box-wrapper">
           <div class="gift-box" id="gift-box-elem">
             <div class="gift-box-lid"></div>
@@ -40,6 +44,12 @@
             <div class="gift-box-body"></div>
           </div>
         </div>
+
+        <!-- Playful Developer Attribution Footer -->
+        <footer class="app-credits">
+          <p>Developed with ❤️ by Nikki (Your Permanent Boss, Love, and Primary Wife) 👑</p>
+          <p class="copyright-sub">© 2026 Nikki. All Rights Reserved. (Yes, Tushar is also reserved for Nikki. 😉)</p>
+        </footer>
       </div>
     </section>
 
@@ -49,7 +59,7 @@
         <div class="badge">Unlocking Stage</div>
         <h2>Unlock the Vault of Love 🔐</h2>
         <p class="helper-text margin-tb-lg">Drag the heart key all the way to the right to open your surprise!</p>
-        
+
         <div class="lock-slider-container">
           <div class="lock-slider-track" id="lock-track">
             <div class="lock-slider-fill" id="lock-fill"></div>
@@ -63,11 +73,11 @@
     <section id="level-baby-intro" class="level">
       <div class="glass-card text-center position-relative overflow-hidden">
         <div class="badge">Once upon a time... ✨</div>
-        
+
         <div class="baby-intro-story-container margin-tb-lg">
           <p id="baby-story-p1" class="baby-story-text hidden text-xl">🍼 Once upon a time...</p>
           <p id="baby-story-p2" class="baby-story-text hidden text-lg margin-t-sm">A tiny little baby was born...</p>
-          
+
           <div id="baby-story-portrait" class="baby-portrait-wrapper hidden margin-tb-md">
             <div class="baby-avatar-ring">
               <div class="avatar-img-wrapper">
@@ -75,15 +85,19 @@
               </div>
             </div>
           </div>
-          
+
           <p id="baby-story-p3" class="baby-story-text hidden text-lg">He had no idea that one day,</p>
-          <p id="baby-story-p4" class="baby-story-text font-bold color-pink hidden text-xl margin-b-md">he would become my whole world. ❤️</p>
-          
-          <p id="baby-story-p5" class="baby-story-text hidden text-md italic color-muted">Look at this little baby... who somehow grew into the most handsome man ever. ❤️</p>
-          <p id="baby-story-p6" class="baby-story-text font-bold color-gold margin-t-md hidden text-lg">Can you believe this tiny cutie is 26 today? 🥹🎂❤️</p>
+          <p id="baby-story-p4" class="baby-story-text font-bold color-pink hidden text-xl margin-b-md">he would become
+            my whole world. ❤️</p>
+
+          <p id="baby-story-p5" class="baby-story-text hidden text-md italic color-muted">Look at this little baby...
+            who somehow grew into the most handsome man ever. ❤️</p>
+          <p id="baby-story-p6" class="baby-story-text font-bold color-gold margin-t-md hidden text-lg">Can you believe
+            this tiny cutie is 26 today? 🥹🎂❤️</p>
         </div>
-        
-        <button class="btn btn-primary margin-t-xl hidden" id="baby-intro-next-btn">Let's see what this little baby became... ❤️</button>
+
+        <button class="btn btn-primary margin-t-xl hidden" id="baby-intro-next-btn">Let's see what this little baby
+          became... ❤️</button>
       </div>
     </section>
 
@@ -92,7 +106,7 @@
       <div class="glass-card text-center">
         <div class="badge">Level 1: Welcome</div>
         <h2 class="handwritten color-pink margin-b-md">Hi Tushar, my baby ❤️</h2>
-        
+
         <!-- Birthday Hero Welcome Portrait (Transition style) -->
         <div class="welcome-hero-wrapper margin-tb-md">
           <div class="welcome-hero-avatar">
@@ -107,7 +121,7 @@
           </div>
         </div>
         <p class="helper-text margin-b-md italic color-pink font-bold" id="morphing-text">From this tiny smile...</p>
-        
+
         <div class="greeting-content margin-tb-lg">
           <p class="text-lg">Today is all about celebrating you.</p>
           <p class="text-md margin-t-sm">I made something special because you deserve more than just a text.</p>
@@ -123,7 +137,7 @@
         <div class="badge">Level 2: The Promise</div>
         <h2 class="margin-b-md">Warning: High Sugar Levels Ahead! ⚠️</h2>
         <p class="text-lg margin-tb-lg font-bold">Do you promise to buy me ice cream after this, baby? 🍦</p>
-        
+
         <div class="gate-options-container" id="icecream-options">
           <div class="gate-option-wrapper">
             <button class="btn btn-primary gate-btn" id="icecream-yes-btn">Yes, of course! 🍨</button>
@@ -141,17 +155,17 @@
         <div class="badge">Level 3: Memories Deck</div>
         <h2 class="margin-b-md">Moments with my puppu 📸</h2>
         <p class="helper-text margin-b-lg">Click the top photo to swipe it off and see the next memory...</p>
-        
+
         <div class="card-deck-wrapper">
           <div class="card-deck" id="polaroid-card-deck">
             <!-- Dynamic cards generated by script.js -->
           </div>
         </div>
-        
+
         <div class="deck-controls margin-t-lg">
           <span class="deck-progress" id="deck-progress-text">Card 1 / 5</span>
         </div>
-        
+
         <button class="btn btn-primary margin-t-xl hidden" id="slider-next-btn">Proceed to Level 3.5 🧩</button>
       </div>
     </section>
@@ -162,7 +176,7 @@
         <div class="badge">Level 3.5: Love Match</div>
         <h2>Match the Pairs! 🧩</h2>
         <p class="helper-text margin-b-lg">Find all matching pairs to unlock baby's song room!</p>
-        
+
         <div class="memory-grid" id="memory-grid">
           <!-- 6 face-down cards generated by script -->
         </div>
@@ -174,23 +188,23 @@
       <div class="glass-card text-center">
         <div class="badge">Level 4: Birthday Tune</div>
         <h2 class="margin-b-md">A little melody for you, my love... 🎵❤️</h2>
-        
+
         <!-- Volume Tip Prompt -->
         <div class="volume-tip-box margin-b-md">
           <span class="volume-icon">🔊</span>
           <span class="volume-text">For the best experience, turn up your volume! 🎵</span>
         </div>
-        
+
         <div class="music-player-container margin-tb-xl">
           <div class="vinyl-record-large" id="vinyl-player-btn">
             <div class="vinyl-center-large"></div>
           </div>
           <p id="music-state-text" class="helper-text margin-t-md">Click the record to play a sweet birthday tune 🎵</p>
         </div>
-        
+
         <!-- Floating Lyrics Overlay -->
         <div class="floating-lyrics-container" id="floating-lyrics-container"></div>
-        
+
         <button class="btn btn-primary" id="music-next-btn">Continue to Level 4.5 🎁</button>
       </div>
     </section>
@@ -201,20 +215,20 @@
         <div class="badge">Level 4.5: Compliments</div>
         <h2>The Treasure Chest of Love 👑</h2>
         <p class="helper-text margin-b-lg">Click the chest below to open a reason why I love you...</p>
-        
+
         <div class="chest-box-wrapper" id="chest-btn">
           <div class="chest-box-icon" id="chest-icon">🎁</div>
         </div>
-        
+
         <div class="reason-display-box margin-t-md hidden" id="reason-display-box">
           <p id="reason-text" class="handwritten text-lg color-pink"></p>
         </div>
-        
+
         <div class="reason-progress-bar margin-t-lg">
           <div class="reason-progress-fill" id="reason-progress-fill"></div>
           <span class="reason-progress-text"><span id="reasons-count">0</span>/3 Opened</span>
         </div>
-        
+
         <button class="btn btn-primary margin-t-xl hidden" id="reasons-next-btn">Open Memory Lane ⏳</button>
       </div>
     </section>
@@ -223,7 +237,7 @@
     <section id="level-timeline" class="level">
       <div class="glass-card text-center">
         <div class="badge">Level 5: Memory Lane & Counter</div>
-        
+
         <!-- Live Countdown Clock -->
         <div class="counter-box margin-b-lg">
           <p class="handwritten text-md color-pink margin-b-sm">Every single second with you is a blessing... ⏳</p>
@@ -270,7 +284,7 @@
         <div class="badge">Level 6: Ready?</div>
         <h2 class="margin-b-md">Let's Play a Game! 🕹️</h2>
         <p class="text-lg margin-tb-lg font-bold">Are you ready to show off your gaming skills, Tushar? 🎮</p>
-        
+
         <div class="gate-options-container" id="game-gate-options">
           <div class="gate-option-wrapper">
             <button class="btn btn-primary gate-btn" id="game-gate-yes-btn">Let's do it! ⚡</button>
@@ -288,7 +302,7 @@
         <div class="badge">Level 6: Mini-Game</div>
         <h2 class="margin-b-sm">Catch the Hearts! ❤️</h2>
         <p class="helper-text margin-b-md">Catch 10 falling hearts to unlock the next level!</p>
-        
+
         <div class="game-container">
           <div class="game-score-board">
             <span>Score: <strong id="game-score">0</strong>/10</span>
@@ -308,8 +322,9 @@
       <div class="glass-card text-center">
         <div class="badge">Level 6.5: Scratch Card</div>
         <h2>Scratch the Foil! 🎫</h2>
-        <p class="helper-text margin-b-lg">Use your finger or mouse to scratch away the silver coating and reveal the secret note...</p>
-        
+        <p class="helper-text margin-b-lg">Use your finger or mouse to scratch away the silver coating and reveal the
+          secret note...</p>
+
         <div class="scratch-card-container">
           <div class="scratch-card-under" id="scratch-under-text">
             <!-- Hidden text populated from config -->
@@ -317,7 +332,7 @@
           <canvas id="scratch-canvas"></canvas>
         </div>
         <p class="helper-text margin-t-md" id="scratch-progress-text">Scratched: 0%</p>
-        
+
         <button class="btn btn-primary margin-t-xl hidden" id="scratch-next-btn">Hear my whisper... 💌</button>
       </div>
     </section>
@@ -326,13 +341,13 @@
     <section id="level-typewriter" class="level">
       <div class="glass-card text-center">
         <div class="badge">Level 7: Whisper</div>
-        
+
         <div class="typewriter-box">
           <div id="typewriter-quest-output" class="typewriter-text handwritten text-xl">
             <!-- Text typed here -->
           </div>
         </div>
-        
+
         <button class="btn btn-primary margin-t-xl hidden" id="typewriter-next-btn">Open Final Surprise 🎂</button>
       </div>
     </section>
@@ -341,10 +356,10 @@
     <section id="level-card" class="level">
       <div class="glass-card final-card-outer">
         <div class="badge">Happy Birthday! 🎂</div>
-        
+
         <div class="bday-card-unfold">
           <h1 class="glow-text text-3d color-pink margin-b-md">🎉 HAPPY BIRTHDAY TUSHAR 🎉</h1>
-          
+
           <!-- Interactive CSS Birthday Cake -->
           <div class="cake-container">
             <div class="cake" id="bday-cake">
@@ -356,12 +371,12 @@
             </div>
             <p class="cake-instruction helper-text margin-t-sm">Tap the candle to blow it out! 🕯️✨</p>
           </div>
-          
+
           <div class="bday-card-body text-center" id="bday-card-text">
             <!-- Filled dynamically -->
           </div>
         </div>
-        
+
         <div class="text-center margin-t-xl">
           <button class="btn btn-primary glow-btn-bday" id="card-next-btn">One Last Surprise... 🌹</button>
         </div>
@@ -372,7 +387,7 @@
     <section id="level-last" class="level">
       <div class="glass-card text-center position-relative overflow-hidden">
         <div class="badge">The End</div>
-        
+
         <!-- Theatrical Premiere Countdown Overlay -->
         <div id="movie-countdown-overlay" class="movie-countdown-overlay hidden">
           <div class="countdown-circle">
@@ -392,10 +407,10 @@
         <div id="fake-loading-overlay" class="fake-loading-overlay hidden">
           <div class="loading-console" id="loading-console"></div>
         </div>
-        
+
         <!-- Interactive Question Chain -->
         <div id="last-surprise-prompt" class="fade-in">
-          
+
           <!-- Chain Question 1 -->
           <div id="chain-q1" class="chain-question active">
             <h2 class="margin-b-lg">Puppu, do you think I am officially the cutest girlfriend ever? 🥺</h2>
@@ -425,16 +440,17 @@
           <!-- Chain Question 3 -->
           <div id="chain-q3" class="chain-question hidden">
             <h2 class="margin-b-lg">A final verification... 😏</h2>
-            <button class="btn btn-primary btn-lg pulse-infinite" id="love-only-btn">Click only if you love me 😏</button>
+            <button class="btn btn-primary btn-lg pulse-infinite" id="love-only-btn">Click only if you love me
+              😏</button>
           </div>
 
         </div>
-        
+
         <!-- Final Reveal Screen -->
         <div id="last-surprise-reveal" class="hidden text-center">
           <h2 class="handwritten color-pink text-3d pulse-infinite text-xxl">YES!</h2>
           <p class="text-lg margin-tb-md">I love you more than words can express! ❤️</p>
-          
+
           <!-- Theatrical Hero Movie Poster -->
           <div class="hero-poster-wrapper margin-tb-lg">
             <div class="movie-poster">
@@ -452,12 +468,13 @@
                 <h2 class="poster-title">MY SUPERHERO ❤️</h2>
                 <div class="poster-starring">STARRING TUSHAR</div>
                 <div class="poster-billing">
-                  DIRECTED BY HIS LOVE • MUSIC BY HEARTBEATS • WRITTEN BY DESTINY • PRODUCED BY FOREVER CO.
+                  DIRECTED & PRODUCED BY HIS LOVE NIKKI (YOUR PRIMARY WIFE) • STARRING TUSHAR • SCREENPLAY BY DESTINY •
+                  MUSIC BY HEARTBEATS
                 </div>
               </div>
             </div>
           </div>
-          
+
           <button class="btn btn-primary margin-t-md" id="trigger-final-stars-btn">Close Premiere 🎬</button>
         </div>
       </div>
@@ -467,7 +484,7 @@
 
   <!-- Secret Heart Button -->
   <div id="secret-heart-btn" class="secret-heart-btn">❤️</div>
-  
+
   <!-- Secret Heart Modal -->
   <div id="secret-heart-modal" class="custom-modal hidden">
     <div class="modal-content glass-card text-center">
@@ -481,8 +498,62 @@
   <!-- Final Starry Ending Screen -->
   <div id="final-starry-ending" class="final-starry-ending hidden">
     <div id="stars-container"></div>
-    <div class="ending-message-box">
-      <h2 class="handwritten color-gold glow-gold text-xxl text-3d text-center">Happy Birthday,<br>my forever favorite person.<br>❤️</h2>
+    <div class="ending-message-box text-center">
+      <h2 class="handwritten color-gold glow-gold text-xxl text-3d text-center margin-b-lg">Happy Birthday,<br>my
+        forever favorite person.<br>❤️</h2>
+
+      <!-- New Interactive Upgrades -->
+      <div class="ending-actions margin-t-xl"
+        style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-primary glow-btn-bday" id="open-letter-btn" style="margin: 0; min-width: 160px;">Open My
+          Letter ✉️</button>
+        <button class="btn btn-secondary" id="open-coupons-btn" style="margin: 0; min-width: 160px;">My Love Coupons
+          🎁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Love Letter Modal -->
+  <div id="love-letter-modal" class="custom-modal hidden">
+    <div class="modal-content letter-modal-content glass-card text-center position-relative"
+      style="max-width: 420px; width: 92%; padding: 40px 25px;">
+      <button class="close-modal-btn" id="close-letter-modal"
+        style="position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: color 0.3s; z-index: 10;">&times;</button>
+
+      <div class="envelope-wrapper" id="envelope-wrapper">
+        <div class="envelope" id="envelope-element">
+          <div class="envelope-flap"></div>
+          <div class="envelope-paper"></div>
+          <div class="envelope-front"></div>
+          <div class="envelope-seal" id="envelope-seal-btn">❤️</div>
+        </div>
+        <p class="helper-text margin-t-md" id="envelope-instruction">Tap the wax seal to open Nikki's letter... 💌</p>
+      </div>
+
+      <div class="letter-paper hidden" id="letter-paper">
+        <div class="letter-scroll-area" style="max-height: 60vh; overflow-y: auto; padding: 10px;">
+          <p class="handwritten cursive-text" id="letter-text-content"
+            style="white-space: pre-wrap; font-size: 1.35rem; line-height: 1.6; color: #4a3b32; text-align: left; font-family: var(--font-handwritten);">
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Love Coupons Modal -->
+  <div id="love-coupons-modal" class="custom-modal hidden">
+    <div class="modal-content coupons-modal-content glass-card text-center position-relative"
+      style="max-width: 440px; width: 95%; max-height: 85vh; display: flex; flex-direction: column; padding: 25px 20px;">
+      <button class="close-modal-btn" id="close-coupons-modal"
+        style="position: absolute; top: 12px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; transition: color 0.3s; z-index: 10;">&times;</button>
+      <h3 class="margin-b-sm" style="color: var(--accent-color);">Your Love Coupons 🎫</h3>
+      <p class="helper-text margin-b-md" style="font-size: 0.78rem;">Click 'Redeem' to claim. Take a screenshot & send
+        it to Nikki! 😉</p>
+      <div class="coupons-list-container" style="overflow-y: auto; flex: 1; padding-right: 5px;">
+        <div class="coupons-grid" id="coupons-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
     </div>
   </div>
 
@@ -496,4 +567,5 @@
   <script src="config.js?v=6.0"></script>
   <script src="script.js?v=6.0"></script>
 </body>
+
 </html>
