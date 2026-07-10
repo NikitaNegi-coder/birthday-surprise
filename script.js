@@ -1811,7 +1811,7 @@ function startGreetingMorph() {
       updateAvatarPhoto(photo, CONFIG.poolPhoto);
       photo.style.opacity = "1";
       morphText.innerText = "...to the handsome man who stole my heart. ❤️";
-      badge.innerText = "❤️ My Favorite Human";
+      badge.innerText = "❤️ My Whole World";
       playChime();
       triggerBGConfettiBurst();
     }, 400);
